@@ -5,7 +5,7 @@ export const getGlobalRanks = async ({ date }: { date: string }) => {
     const response = axios
         .get<IGlobalRanks>(`/ranks/worlds/global?date=${date}`)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             return res.data
         })
         .catch(err => {
