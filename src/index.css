@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .box {
+        @apply flex flex-col space-y-3 w-full h-fit
+    }
+
+    .box__header {
+        @apply flex flex-row justify-between w-full h-8 items-center
+    }
+
+    .box__body {
+        @apply w-full h-fit rounded-md
+    }
+
+    .box__body__content {
+        @apply w-full h-full
+    }
+
+    .text-normal {
+        @apply text-gray-1 text-sm font-light
+    }
+
+    .text-secondary {
+        @apply text-gray-1 text-sm font-bold
+    }
+}

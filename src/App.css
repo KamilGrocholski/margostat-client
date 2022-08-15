@@ -1,0 +1,122 @@
+:root{
+  scrollbar-color: rgb(14 165 233) #121212 !important;
+  scrollbar-width: thin !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply text-white-1;
+  /* background-image: url('./assets/images/bg.jpg'); */
+  background-image: url('./assets/images/ice.webp');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+} 
+
+input[type=number] { 
+  -moz-appearance: textfield;
+  appearance: textfield;
+  margin: 0; 
+  padding: 0;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+      padding: 0; 
+}
+
+#app__main {
+  /* background-image: linear-gradient(.95turn, #10131a, 90%, rgba(20,23,32,0.5)); */
+  background-image: linear-gradient(.90turn, rgba(21, 24, 26, 0.98), 100%, rgba(12, 98, 197, 0.7));
+}
+
+@keyframes from0ToN {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  @apply w-1 
+}
+
+/* Track */
+::-webkit-scrollbar-track, ::-webkit-scrollbar-track-piece {
+  @apply bg-dark-7
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:vertical {
+  @apply bg-sky-500 rounded
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-thumb:vertical:hover {
+  background: #555;
+}
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
