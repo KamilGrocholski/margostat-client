@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let baseURL = '';
+let baseURL = ''
 if (process.env.NODE_ENV === 'development') {
   baseURL = 'http://localhost:5000/api'
 } else if (process.env.NODE_ENV === 'production') {
