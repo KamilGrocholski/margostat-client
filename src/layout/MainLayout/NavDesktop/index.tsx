@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 import ArrowDownIcon from '../../../assets/svg/ArrowDownIcon'
 import { MARGONEM_CONSTS } from '../../../constants/Margonem'
 
-const navItems = [
+export const navItems = [
     {
         label: 'Statystyki',
         to: '/statystyki',
@@ -28,7 +28,7 @@ const navItems = [
 const NavDesktop = () => {
     return (
         <nav className='h-full'>
-            <ul className='flex flex-row items-center h-full space-x-5'>
+            <ul className='md:flex hidden flex-row items-center h-full space-x-5'>
                 {navItems.map((navItem, i) => {
                     if (navItem.dropdownItems) {
                         return <NavItemWithMenu key={ i } to={ navItem.to } label={ navItem.label } dropdownItems={ navItem.dropdownItems } />

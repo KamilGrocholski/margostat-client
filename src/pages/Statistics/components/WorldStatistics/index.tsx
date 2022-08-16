@@ -126,23 +126,26 @@ const WorldStatistics = () => {
                                     <ArrowDownIcon/>
                                 </span>
                             </div>
-                            <div 
-                                className={ `bg-dark-7/90 top-10 border-b border-gray-1/50 rounded-md text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1 ${ !dateMenu && 'hidden' }` }
-                                style={{
-                                    animation: 'fadeIn 0.1s ease-in'
-                                }}
-                            >
-                                    {queryDate.data?.datesArray.map((date, i) => (
-                                        <div 
-                                            key={ i }
-                                            id={ date }
-                                            onClick={ e => setDate(e.currentTarget.id) }
-                                            className={ `hover:text-sky-500 hover:bg-dark-7/90 ${ i % 2 !== 0 && 'bg-dark-6/90' }` }
-                                        >
-                                            { date.slice(0, 10) }
-                                        </div>
-                                    ))}
-                            </div>
+                            {
+                                dateMenu && 
+                                    <div 
+                                        className={ `bg-dark-7/90 top-10 border-b border-gray-1/50 rounded-md text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1` }
+                                        style={{
+                                            animation: 'fadeIn 0.1s ease-in'
+                                        }}
+                                    >
+                                        {queryDate.data?.datesArray.map((date, i) => (
+                                            <div 
+                                                key={ i }
+                                                id={ date }
+                                                onClick={ e => setDate(e.currentTarget.id) }
+                                                className={ `hover:text-sky-500 hover:bg-dark-7/90 border-b border-gray-1/50 ${ i % 2 !== 0 && 'bg-dark-6/90' }` }
+                                            >
+                                                { date.slice(0, 10) }
+                                            </div>
+                                        ))}
+                                    </div>
+                            }
                         </button>
                 </div>
             </div>
