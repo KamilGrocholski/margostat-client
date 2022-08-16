@@ -108,7 +108,7 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                             { MARGONEM_CONSTS.PROFESSIONS[d.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
                         </div>
                         <div 
-                            className='col-span-3 font-semibold test-lg'
+                            className='col-span-3 text-sm font-semibold lg:text-md'
                             style={{
                                 color: MARGONEM_CONSTS.PROFESSIONS[d.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].color
                             }}
@@ -146,10 +146,11 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                 </div>
             ))}
         </div>
+
         <div className='grid grid-cols-10 col-span-4 p-3 grid-rows-10'>
-            <div className='col-start-2 col-end-11 row-span-9'>
+            <div className='col-start-1 col-end-11 sm:col-start-2 row-span-9'>
                 <form onSubmit={ handleSubmit } className='flex flex-col space-y-8'>
-                        <div className='flex flex-row justify-between'>
+                        <div className='flex flex-col justify-between lg:flex-row'>
                             <div className='flex flex-col w-fit'>
                                 <label htmlFor='minLvl' className='text-secondary'>Min</label> 
                                 <div className='flex flex-row space-y-1 border rounded border-sky-500'>
@@ -157,7 +158,7 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                                         <button onClick={ e => decrementMinLvl(e) } className='p-2 rotate-90'>
                                             <ArrowDownIcon />
                                         </button>
-                                        <input id='minLvl' type='number' value={ minLvl } className='w-8 text-center bg-transparent' onChange={ handleOnChangeMinLvl } />
+                                        <input id='minLvl' type='number' value={ minLvl } className='w-8 text-center bg-dark-6/90' onChange={ handleOnChangeMinLvl } />
                                         <button onClick={ e => incrementMinLvl(e) } className='p-2 -rotate-90'>
                                             <ArrowDownIcon />
                                         </button>
@@ -170,7 +171,7 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                                     <button onClick={ e => decrementMaxLvl(e) } className='p-2 rotate-90'>
                                         <ArrowDownIcon />
                                     </button>
-                                    <input type='number' value={ maxLvl } className='w-8 text-center bg-transparent' onChange={ handleOnChangeMaxLvl } />
+                                    <input type='number' value={ maxLvl } className='w-8 text-center bg-dark-6/90' onChange={ handleOnChangeMaxLvl } />
                                     <button onClick={ e => incrementMaxLvl(e) } className='p-2 -rotate-90 '>
                                         <ArrowDownIcon />
                                     </button>
@@ -181,9 +182,9 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                         <input id='minLvl' className='w-16 px-3 rounded bg-dark-6/90' type='number' value={ minLvl } onChange={ handleOnChangeMinLvl } />
                         <label htmlFor='maxLvl'>Max</label>
                         <input id='maxLvl' className='w-16 px-3 rounded bg-dark-6/90' type='number' value={ maxLvl } onChange={ handleOnChangeMaxLvl } /> */}
-                    <div className='flex flex-row justify-between'>
-                        <label htmlFor='oneLvl'>Wybierz jeden poziom</label>
-                        <input id='oneLvl' className='w-16 px-3 rounded bg-dark-6/90' type='number' value={ oneLvl ? oneLvl : '' } onChange={ handleOnChangeOneLvl } />
+                    <div className='flex flex-row justify-start space-x-1 sm:justify-between'>
+                        <label htmlFor='oneLvl' className='text-secondary'>Wybierz jeden poziom</label>
+                        <input id='oneLvl' className='w-16 px-3 border rounded border-sky-500 bg-dark-6/90' type='number' value={ oneLvl ? oneLvl : '' } onChange={ handleOnChangeOneLvl } />
                     </div>
                     <button type='submit' className='w-full h-10 border rounded text-sky-500 border-sky-500'>
                         Filtruj
@@ -198,7 +199,7 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
 const ProfsByLvl = ({ max, world, date } : { max: number, world: string, date: string }) => {
 
   return (
-    <div className='grid grid-cols-12'>
+    <div className='flex flex-col grid-cols-12 lg:grid'>
         <ProfsChart max={ max } world={ world } date={ date } />
     </div>
   )

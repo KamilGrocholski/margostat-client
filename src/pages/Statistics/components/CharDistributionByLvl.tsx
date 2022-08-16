@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -8,6 +7,7 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
+  import ScrollContainer from 'react-indiana-drag-scroll'
   import { Bar } from 'react-chartjs-2';
 import sumProfs, { ISumProfs } from '../../../utils/sumProfs';
 import { MARGONEM_CONSTS } from '../../../constants/Margonem';
@@ -17,7 +17,7 @@ import { MARGONEM_CONSTS } from '../../../constants/Margonem';
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
   );
 
 interface props extends ISumProfs {
@@ -35,7 +35,7 @@ const CharDistributionByLvl = ({ prof, profsByLvl } : props) => {
             title: {
                 display: false,
             }
-        }
+        }, 
     }
 
     const calcProfsSum = sumProfs({ prof, profsByLvl })
@@ -45,20 +45,20 @@ const CharDistributionByLvl = ({ prof, profsByLvl } : props) => {
         datasets: [
             {
                 data: calcProfsSum.datasets_data,
-                backgroundColor: `${ prof ? MARGONEM_CONSTS.PROFESSIONS[prof].color : 'white' }`
+                backgroundColor: `${ prof ? MARGONEM_CONSTS.PROFESSIONS[prof].color : 'gray' }`,
             }
         ]
     }
 
   return (
-    <div className='grid grid-cols-12'>
-        <div className='col-span-12 p-3 h-[300px]'>
-            <Bar 
-                options={ options }
-                data={ data }
-            />
-        </div>
-    </div>
+        <ScrollContainer className="grid grid-cols-12 scroll-container" vertical={ false } hideScrollbars={ false }>
+            <div className='col-span-12 p-3 h-[300px] w-[7000px] overflow-x-hidden'>
+                    <Bar 
+                        options={ options }
+                        data={ data }
+                    />
+            </div>
+        </ScrollContainer>
   )
 }
 

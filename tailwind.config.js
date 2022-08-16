@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
 
+    screens: {
+        lg: '1320px'
+    },
+
     container: {
       screens: {
         lg: '1320px'

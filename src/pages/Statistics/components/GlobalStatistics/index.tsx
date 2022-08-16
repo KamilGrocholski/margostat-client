@@ -88,7 +88,7 @@ const GlobalStatistics = () => {
         : !query.data || !queryRanks.data || !queryDate.data
         ? <p>xd</p>
         : (
-        <div className='grid grid-cols-12 gap-5'>
+        <div className='flex flex-col grid-cols-12 gap-5 lg:grid'>
             <div className='flex flex-col col-span-10 my-6 space-y-2'>
                 <div className='text-4xl font-bold text-left'>
                     <div className='flex flex-row'>
@@ -102,7 +102,7 @@ const GlobalStatistics = () => {
                     <span className='text-normal'>Dane z okresu <span className='text-secondary'>{ getFirstCreationTime(query.data.creationTimesArray) }</span> do <span className='text-secondary'>{ getLastCreationTime(query.data.creationTimesArray) }</span></span>
                 </div>
             </div>
-            <div className='flex flex-col items-center justify-start col-span-2 my-6 space-y-2'>
+            <div className='flex flex-col items-center justify-start col-span-2 my-6 space-y-2 lg:items-end'>
                 <div className='flex flex-col items-end space-y-3'>
                     <div className='text-normal'>
                         Statystyki z <span className='text-sm text-secondary'>{ query.data.creationTime.slice(0, 10) }</span>
@@ -117,9 +117,9 @@ const GlobalStatistics = () => {
                                 </span>
                             </div>
                             <div 
-                                className={ `bg-dark-7/90 border-b border-gray-1/40 top-10 text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1 ${ !dateMenu && 'hidden' }` }
+                                className={ `bg-dark-7/90 border-b rounded-md border-gray-1/40 top-10 text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1 ${ !dateMenu && 'hidden' }` }
                                 style={{
-                                    animation: 'fadeIn 0.2s ease-in-out'
+                                    animation: 'fadeIn 0.1s ease-in'
                                 }}
                             >
                                     {queryDate.data?.datesArray.map((date, i) => (
