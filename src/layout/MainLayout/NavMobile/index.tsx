@@ -31,7 +31,7 @@ export const navItems = [
 
 const NavMobile = () => {
   return (
-    <nav className='fixed md:hidden block bottom-0 left-0 right-0 h-12 bg-black text-white'>
+    <nav className='fixed md:hidden block bottom-0 left-0 right-0 h-12 bg-black text-white z-50'>
       <ul className='flex flex-row items-center justify-around p-3 w-full h-full'>
         {navItems.map((navItem, i) => {
           if (navItem.dropdownItems) {
@@ -111,7 +111,7 @@ const NavMobileItemWithMenu = (props: NMIWMprops) => {
   return (
     <li>
       <button
-        onClick={ () => setIsOpen(prev => !prev) }
+        onTouchStart={ () => setIsOpen(prev => !prev) }
         // onTouchEnd={ () => setIsOpen(false) }
         className={
           `text-secondary ${ isActive && 'border-b border-sky-500 text-sky-500' }`
@@ -121,7 +121,7 @@ const NavMobileItemWithMenu = (props: NMIWMprops) => {
       </button>
       {
         isOpen && 
-          <div className='fixed z-30 top-16 p-3 bottom-12 flex flex-col items-center  left-0 right-0 bg-dark-7/90'>
+          <div className='fixed z-40 top-16 p-3 bottom-12 flex flex-col items-center overflow-x-scroll left-0 right-0 bg-dark-7/90'>
             {props.dropdownItems.map((item, i) => (
               <div key={ i } className='w-full'>
                 <div
@@ -137,9 +137,9 @@ const NavMobileItemWithMenu = (props: NMIWMprops) => {
                       className='border-b border-gray-1'
                     >
                       <Link
-                        onClick={ () => setIsOpen(false) }
                         to={ item.specialItem.to }
-                        className='text-lg'
+                        onClick={ () => setIsOpen(false) }
+                        className='text-lg p-3'
                       >
                         { item.specialItem.label }
                       </Link>
@@ -148,8 +148,9 @@ const NavMobileItemWithMenu = (props: NMIWMprops) => {
                   {item.items.map((item, i) => (
                     <li key={ i }>
                       <Link
-                        onClick={ () => setIsOpen(false) }
                         to={ item.to }
+                        onClick={ () => setIsOpen(false) }
+                        className='p-3'
                       >
                         { item.label }
                       </Link>

@@ -9,6 +9,7 @@ import GlobeIcon from '../../../../assets/svg/GlobeIcon'
 import Loader from '../../../../components/Loader'
 import Trending from '../../../../components/Trending'
 import { MARGONEM_CONSTS } from '../../../../constants/Margonem'
+import { useWindowDimentions } from '../../../../hooks/useWindowDimentions'
 import numberWithSpaces from '../../../../utils/numberWithSpaces'
 import Box from '../Box'
 import CharDistributionByLvl from '../CharDistributionByLvl'
@@ -58,6 +59,7 @@ const WorldStatistics = () => {
         setDateMenu(prev => !prev)
     }
 
+    const windowDimentions = useWindowDimentions()
     useEffect(() => {
         const handleEvent = (e: Event) => {
             if (dateButtonRef.current && !dateButtonRef.current.contains(e.target as Node)) {
@@ -65,10 +67,19 @@ const WorldStatistics = () => {
             }
         }
 
-        document.addEventListener('click', handleEvent, true)
-
-        return () => document.removeEventListener('click', handleEvent, true)
-    }, [dateButtonRef])
+        if (windowDimentions?.width && windowDimentions?.width > 780) {
+            document.addEventListener('mousedown', handleEvent, false)
+        } else {
+            document.addEventListener('touchstart', handleEvent, false)
+        }
+        return () => {
+            if (windowDimentions?.width && windowDimentions?.width > 780) {
+                document.removeEventListener('mousedown', handleEvent, false)
+            } else {
+                document.removeEventListener('touchstart', handleEvent, false)
+            }
+        }
+    }, [dateMenu])
     
 
     const getFirstCreationTime = (arr: string[]) => {
@@ -117,36 +128,70 @@ const WorldStatistics = () => {
                     <div className='text-normal'>
                         Statystyki z <span className='text-sm text-secondary'>{ query.data.creationTime.slice(0, 10) }</span>
                     </div>
-                        <button onClick={ handleShowDateMenu } ref={ dateButtonRef } className='relative px-6 py-1 font-semibold rounded-md bg-dark-7/90 hover:text-sky-500'>
-                            <div className='flex flex-row items-center justify-between space-x-3'>
-                                <span>Wybierz datę</span>
-                                <span
-                                    className={ `${ dateMenu && '-rotate-180' } transition-all duration-400 delay-400 easy-in-out` }
-                                >
-                                    <ArrowDownIcon/>
-                                </span>
-                            </div>
-                            {
-                                dateMenu && 
-                                    <div 
-                                        className={ `bg-dark-7/90 top-10 border-b border-gray-1/50 rounded-md text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1` }
-                                        style={{
-                                            animation: 'fadeIn 0.1s ease-in'
-                                        }}
-                                    >
-                                        {queryDate.data?.datesArray.map((date, i) => (
-                                            <div 
-                                                key={ i }
-                                                id={ date }
-                                                onClick={ e => setDate(e.currentTarget.id) }
-                                                className={ `hover:text-sky-500 hover:bg-dark-7/90 border-b border-gray-1/50 ${ i % 2 !== 0 && 'bg-dark-6/90' }` }
-                                            >
-                                                { date.slice(0, 10) }
-                                            </div>
-                                        ))}
-                                    </div>
-                            }
-                        </button>
+                    {
+                                            windowDimentions?.width && windowDimentions?.width > 780 ?
+                                                <button onMouseDown={handleShowDateMenu}  ref={dateButtonRef} className='relative px-6 py-1 font-semibold rounded-md bg-dark-7/90 hover:text-sky-500'>
+                                                <div className='flex flex-row items-center justify-between space-x-3'>
+                                                    <span>Wybierz datę</span>
+                                                    <span
+                                                        className={`${ dateMenu && '-rotate-180' } transition-all duration-100 easy-in`}
+                                                    >
+                                                        <ArrowDownIcon />
+                                                    </span>
+                                                </div>
+                                                {
+                                                    dateMenu && 
+                                                        <div 
+                                                            className={ `bg-dark-7/90 top-10 border-b border-gray-1/50 rounded-md text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1` }
+                                                            style={{
+                                                                animation: 'fadeIn 0.1s ease-in'
+                                                            }}
+                                                        >
+                                                        {queryDate.data?.datesArray.map((date, i) => (
+                                                            <div 
+                                                                key={ i }
+                                                                id={ date }
+                                                                onMouseDown={ e => setDate(e.currentTarget.id) }
+                                                                className={ `hover:text-sky-500 hover:bg-dark-7/90 border-b border-gray-1/50` }
+                                                            >
+                                                                { date.slice(0, 10) }
+                                                            </div>
+                                                        ))}
+                                                        </div>
+                                                }
+                                                </button>
+                                            :
+                                                <button onTouchStart={handleShowDateMenu}  ref={dateButtonRef} className='relative px-6 py-1 font-semibold rounded-md bg-dark-7/90 hover:text-sky-500'>
+                                                <div className='flex flex-row items-center justify-between space-x-3'>
+                                                    <span>Wybierz datę</span>
+                                                    <span
+                                                        className={`${ dateMenu && '-rotate-180' } transition-all duration-100 easy-in`}
+                                                    >
+                                                        <ArrowDownIcon />
+                                                    </span>
+                                                </div>
+                                                {
+                                                    dateMenu && 
+                                                        <div 
+                                                            className={ `bg-dark-7/90 top-10 border-b border-gray-1/50 rounded-md text-secondary p-3 absolute right-0 w-full z-10 flex flex-col space-y-1` }
+                                                            style={{
+                                                                animation: 'fadeIn 0.1s ease-in'
+                                                            }}
+                                                        >
+                                                        {queryDate.data?.datesArray.map((date, i) => (
+                                                            <div 
+                                                                key={ i }
+                                                                id={ date }
+                                                                onTouchStart={ e => setDate(e.currentTarget.id) }
+                                                                className={ `hover:text-sky-500 hover:bg-dark-7/90 border-b border-gray-1/50` }
+                                                            >
+                                                                { date.slice(0, 10) }
+                                                            </div>
+                                                        ))}
+                                                        </div>
+                                                }
+                                            </button>
+                                        }
                 </div>
             </div>
 
