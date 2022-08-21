@@ -1,33 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { MARGONEM_CONSTS } from '../../../constants/Margonem'
-// import { navItems } from '../NavDesktop'
-
-export const navItems = [
-  {
-    label: 'Strona główna',
-    to: '/'
-  },
-  {
-      label: 'Statystyki',
-      to: '/statystyki',
-      dropdownItems: [
-          {
-              label: 'Światy',
-              specialItem: {
-                  label: 'Wszystkie',
-                  to: '/statystyki/swiaty'
-              },
-              items: MARGONEM_CONSTS.WORLDS.map((world) => {
-                  return {
-                      label: world,
-                      to: `/statystyki/swiaty/${ world }`
-                  }
-              })
-          }
-      ]
-  },
-]
+import { navItems } from '../NavDesktop'
 
 const NavMobile = () => {
   return (

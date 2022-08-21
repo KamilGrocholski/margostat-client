@@ -66,7 +66,7 @@ const ProfsGain = ({ global, worlds, type }: props) => {
                                     style={
                                         {
                                             width: `${ type === 'last' ? (d.gainFromLast / global.nProfs[0].gainFromLast) * 100 : (d.gainAvg / global.nProfs[0].gainAvg) * 100 }%`,
-                                            backgroundColor: MARGONEM_CONSTS.PROFESSIONS[d.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].color,
+                                            backgroundImage: MARGONEM_CONSTS.PROFESSIONS[d.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].gradient,
                                             animation: 'from0ToN 2s ease-in-out'
                                         }
                                     }

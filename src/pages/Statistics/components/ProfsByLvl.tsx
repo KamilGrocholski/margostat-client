@@ -127,13 +127,13 @@ const ProfsChart = ({ max, world, date }: { max: number, world: string, date: st
                                         { numberWithSpaces(d.q) }
                                     </div>
                                 </div>
-                                <div className='flex items-center justify-end w-full h-[4px] bg-gray-2/50 rounded'>
+                                <div className='flex items-center justify-end w-full h-[6px] bg-gray-2/50 rounded'>
                                     <div
-                                        className='flex h-[4px] rounded'
+                                        className='flex h-[6px] rounded'
                                         style={
                                             {
                                                 width: `${ d.p === 0 ? '0' : ((d.p / firstPlaceProf.p ) * 100) }%`,
-                                                backgroundColor: MARGONEM_CONSTS.PROFESSIONS[d.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].color,
+                                                backgroundImage: MARGONEM_CONSTS.PROFESSIONS[d.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].gradient,
                                                 animation: 'from0ToN 1s ease-in-out'
                                             }
                                         }

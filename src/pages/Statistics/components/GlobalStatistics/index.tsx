@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Trending from '../../../../components/Trending'
 import numberWithSpaces from '../../../../utils/numberWithSpaces'
 import Section from '../Section'

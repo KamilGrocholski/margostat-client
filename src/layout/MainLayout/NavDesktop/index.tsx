@@ -22,6 +22,10 @@ export const navItems = [
                 })
             }
         ]
+    },
+    {
+        label: 'Kreator drużyny -- TEST',
+        to: '/kreator-druzyny'
     }
 ]
 
