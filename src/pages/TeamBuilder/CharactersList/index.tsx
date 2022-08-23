@@ -3,6 +3,7 @@ import { MARGONEM_CONSTS } from '../../../constants/Margonem'
 import { ICharacter, TCharactersList } from '../TeamBuilderTypes'
 
 const CharacterItem = (props: ICharacter) => {
+
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "li",
         item: { 
@@ -18,7 +19,7 @@ const CharacterItem = (props: ICharacter) => {
     return (
         <li 
             ref={ drag }
-            className={ `drop-shadow-lg flex flex-row space-x-3 font-semibold text-sm items-center cursor-grab bg-dark-6/50 px-2 py-1 ${ isDragging && 'border border-sky-500'}` }
+            className={ `relative drop-shadow-lg flex flex-row space-x-3 font-semibold text-sm items-center cursor-grab bg-dark-6/50 px-2 py-1 ${ isDragging && 'border border-sky-500'}` }
         >
             <div>
                 { MARGONEM_CONSTS.PROFESSIONS[props.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
@@ -37,14 +38,14 @@ const CharacterItem = (props: ICharacter) => {
     )
 }
 
-const CharactersList = ({ chars}: { chars: TCharactersList | null }) => {
+const CharactersList = ({ chars }: { chars: TCharactersList | null }) => {
 
   return (
 
         <div className='overflow-y-scroll h-full pr-3 overscroll-none'>
             <ul className='space-y-1 h-full'>
                 {chars?.map((char, i) => (
-                    <CharacterItem key={ char.name + i } { ...char } />
+                    <CharacterItem key={ char.name + i } {...char} />
                 ))}
             </ul>
         </div>

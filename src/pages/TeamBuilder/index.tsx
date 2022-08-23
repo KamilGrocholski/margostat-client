@@ -17,6 +17,7 @@ import RefundIcon from '../../assets/svg/RefundIcon'
 import AddPersonIcon from '../../assets/svg/AddPersonIcon'
 import DocumentAddIcon from '../../assets/svg/DocumentAddIcon'
 import DocumentDownloadIcon from '../../assets/svg/DocumentDownloadIcon'
+import Loader from '../../components/Loader'
 
 
 const TeamBuilder = () => {
@@ -203,41 +204,50 @@ const TeamBuilder = () => {
             {modal &&
                 <div className='fixed bottom-0 flex items-center justify-center left-0 right-0 top-0 backdrop-blur-sm z-[100]'>
                     <div className='relative flex flex-col items-center justify-center w-fit bg-dark-8/90 p-3 h-fit shadow-sm shadow-black/30 space-y-3'>
-                        <button className='absolute top-0 right-2 text-2xl text-red-500' onClick={ () => { setModal(false); setClanCharsMsg('') } }>
+                        <button className='absolute top-0 right-2 text-2xl text-red-500' onClick={ () => { setModal(false); setClanCharsMsg(''); setIsOwnCharError(false) } }>
                             &times;
                         </button>
-                        <form onSubmit={ fetchClanChars } className='flex items-center justify-center flex-col space-y-3'>
-                            <div className={ `text-xs text-secondary ${ isClanCharsError ? 'text-red-500' : 'text-green-500' }` }>
-                                { clanCharsMsg }
-                            </div>
-                            <label htmlFor='clanLink' className='font-semibold text-white-1'>Podaj link do strony klanowej</label>
-                            <input id='clanLink' type='text' value={ clanLink } onChange={ e => setClanLink(e.target.value) } className='text-white-1 px-3 bg-dark-6/50' />
-                            <button disabled={ isLoading } type='submit' className={ `px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>Dodaj postacie z klanu</button>
-                        </form>
-                        <form onSubmit={ createOwnCharacters } className='flex items-center justify-center flex-col space-y-3'>
-                            <div className={ `text-xs text-secondary ${ isOwnCharError ? 'text-red-500' : 'text-green-500' }` }>
-                                { ownCharMsg }
-                            </div>
-                            <input placeholder={ 'Nazwa postaci' } type='text' value={ charForm.name } onChange={ e => setCharForm(prev => ({ ...prev, name: e.target.value })) } className='text-white-1 px-3 bg-dark-6/50' />
-                            <div className='flex flex-row space-x-3'>
-                                {Object.values(MARGONEM_CONSTS.PROFESSIONS).map((prof, i) => (
-                                    <button 
-                                        type='button'
-                                        key={ i }
-                                        id={ prof.name }
-                                        className={ `px-3 py-1 rounded-md border-dark-8/90 ${ charForm.prof !== prof.name && 'opacity-20' }` }
-                                        onClick={ e => handleSetCharForm(e, prof.name) }
-                                        style={{ backgroundImage: MARGONEM_CONSTS.PROFESSIONS[prof.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].gradient }}
-                                    >
-                                        <div>
-                                            { MARGONEM_CONSTS.PROFESSIONS[prof.name].icon }
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                            <input placeholder='Poziom' type='number' value={ charForm.lvl } onChange={ e => setCharForm(prev => ({ ...prev, lvl: parseInt(e.target.value) })) } className='text-white-1 px-3 bg-dark-6/50' />
-                            <button disabled={ isLoading } type='submit' className={ `px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>Stwórz postać</button>
-                        </form>
+                        <div className='flex flex-row space-x-24'>
+                            <form onSubmit={ fetchClanChars } className='text-secondary flex flex-col space-y-3 w-80 h-full justify-between'>
+                                <div className={ `text-xs text-secondary ${ isClanCharsError ? 'text-red-500' : 'text-green-500' }` }>
+                                    { clanCharsMsg }
+                                </div>
+                                <label htmlFor='clanLink' className='font-semibold'>Podaj link do strony klanowej</label>
+                                <input id='clanLink' type='text' value={ clanLink } onChange={ e => setClanLink(e.target.value) } className='text-white-1 px-3 bg-dark-6/50' />
+                                <button disabled={ isLoading } type='submit' className={ `h-10 px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>
+                                    {isLoading 
+                                    ? <span>Trwa pobieranie postaci...</span>
+                                    : <span>Dodaj postacie z klanu</span>}
+                                </button>
+                            </form>
+                            <form onSubmit={ createOwnCharacters } className='flex flex-col space-y-3 text-secondary w-80'>
+                                <div className={ `text-center text-xs text-secondary ${ isOwnCharError ? 'text-red-500' : 'text-green-500' }` }>
+                                    { ownCharMsg }
+                                </div>
+                                <label htmlFor='charNameInput'>Nazwa postaci</label>
+                                <input id='charNameInput' type='text' value={ charForm.name } onChange={ e => setCharForm(prev => ({ ...prev, name: e.target.value })) } className='text-white-1 px-3 bg-dark-6/50' />
+                                <label htmlFor='charLvlInput'>Poziom</label>
+                                <input id='charLvlInput' type='number' value={ charForm.lvl } onChange={ e => setCharForm(prev => ({ ...prev, lvl: parseInt(e.target.value) })) } className='text-white-1 px-3 bg-dark-6/50' />
+                                <label htmlFor='charProfMenu'>Profesja</label>
+                                <div id='charProfMenu' className='flex flex-row space-x-3'>
+                                    {Object.values(MARGONEM_CONSTS.PROFESSIONS).map((prof, i) => (
+                                        <button 
+                                            type='button'
+                                            key={ i }
+                                            id={ prof.name }
+                                            className={ `px-3 py-1 rounded-md border-dark-8/90 ${ charForm.prof !== prof.name && 'opacity-30' }` }
+                                            onClick={ e => handleSetCharForm(e, prof.name) }
+                                            style={{ backgroundImage: MARGONEM_CONSTS.PROFESSIONS[prof.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].gradient }}
+                                        >
+                                            <div>
+                                                { MARGONEM_CONSTS.PROFESSIONS[prof.name].icon }
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                                <button disabled={ isLoading } type='submit' className={ `h-10 mt-12 px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>Stwórz postać</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             }
@@ -305,9 +315,9 @@ const TeamBuilder = () => {
                     <CharactersList chars={ filteredChars ?? null } />
                 </div>
                 <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
-                    <SelectedGroup state={ selectedGroupState } dispatch={ selectedGroupDispatch } groupsListDispatch={ groupsListDispatch } />
+                    <SelectedGroup state={ selectedGroupState } dispatch={ selectedGroupDispatch } groupsListState={ groupsListState } groupsListDispatch={ groupsListDispatch } />
                 </div>
-                <div className='flex flex-col grow p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
+                <div className='flex flex-col w-[35%] p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
                     <GroupList groups={ groupsListState.groupsList ?? null } groupsListDispatch={ groupsListDispatch } selectedGroupDispatch={ selectedGroupDispatch } />
                 </div>
             </div>

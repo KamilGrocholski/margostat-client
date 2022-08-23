@@ -1,6 +1,6 @@
 import { IGroup, TGroupsList } from "../TeamBuilderTypes";
 
-interface IGroupsListState {
+export interface IGroupsListState {
     groupsList?: TGroupsList
 }
 

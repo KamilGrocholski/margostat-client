@@ -13,14 +13,43 @@ interface IGroupProps extends IGroup {
     selectedGroupDispatch: React.Dispatch<TActionSelectedGroup>
 }
 const Group = (props: IGroupProps) => {
+
+    const refGroup = useRef<HTMLLIElement>(null)
+
+    const handleHtmlToImage = useCallback(() => {
+        if (refGroup.current === null) {
+          return
+        }
+
+        toPng(refGroup.current, { cacheBust: true })
+        .then((dataUrl) => {
+            const link = document.createElement('a')
+            link.download = `${ props.name } (${ new Date().toISOString().slice(0, 10) }).png`
+            link.href = dataUrl
+            link.click()
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }, [refGroup])
+
     return (
-        <li className='bg-dark-7 rounded-md p-3 flex flex-col drop-shadow-lg border border-dark-6/90 w-[400px]'>
+        <li    
+            ref={ refGroup }
+            className='bg-dark-7 rounded-md p-3 flex flex-col drop-shadow-lg border border-dark-6/90 w-full'
+        >
             <div className='relative flex items-center justify-center font-semibold text-xl mb-3'>
                 <button 
                     className='absolute -top-1 text-gray-500 left-0 dni'
                     onClick={ () => props.selectedGroupDispatch({ type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } }) }
                 >
                     <EditIcon />
+                </button>
+                <button
+                    className='absolute -top-1 text-gray-500 left-10 dni'
+                    onClick={ handleHtmlToImage }
+                >
+                    <DownloadIcon />
                 </button>
                 <div className='mt-4'>
                     { props.name }
@@ -75,7 +104,7 @@ const GroupList = ({ groups, groupsListDispatch, selectedGroupDispatch }: { grou
         toPng(ref.current, { cacheBust: true })
         .then((dataUrl) => {
             const link = document.createElement('a')
-            link.download = 'lista-druzyn.png'
+            link.download = `lista druzyn (${ new Date().toISOString().slice(0, 10) }).png`
             link.href = dataUrl
             link.click()
           })

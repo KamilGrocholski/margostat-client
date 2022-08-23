@@ -3,11 +3,21 @@ import { useDrag, useDrop } from 'react-dnd';
 import CheckIcon from '../../../assets/svg/CheckIcon';
 import EditIcon from '../../../assets/svg/EditIcon';
 import { MARGONEM_CONSTS } from '../../../constants/Margonem';
-import { TActionGroupsList } from '../GroupsList/reducerGroupList';
+import { IGroupsListState, TActionGroupsList } from '../GroupsList/reducerGroupList';
 import { ICharacter, IGroup } from '../TeamBuilderTypes';
 import { TActionSelectedGroup } from './reducerSelectedGroup';
 
-const SelectedGroupSlot = ({ dispatch, character, slotNumber }: { dispatch: React.Dispatch<TActionSelectedGroup>, character: ICharacter | null, slotNumber: number }) => {
+const SelectedGroupSlot = (
+    { 
+        dispatch, 
+        character, 
+        slotNumber
+    }: 
+    { 
+        dispatch: React.Dispatch<TActionSelectedGroup>, 
+        character: ICharacter | null, 
+        slotNumber: number
+    }) => {
     
     const DragExchange = () => {
         const [{ isOver }, drop] = useDrop(() => ({
@@ -74,20 +84,22 @@ const SelectedGroupSlot = ({ dispatch, character, slotNumber }: { dispatch: Reac
             })
         }
     ))
-    
+
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "li",
-        drop: (item: ICharacter) => dispatch({
-            type: 'ADD_TO_SELECTED_GROUP',
-            payload: {
-                n: slotNumber,
-                character: {
-                    name: item.name,
-                    prof: item.prof,
-                    lvl: item.lvl
+        drop: (item: ICharacter) => {
+            dispatch({
+                type: 'ADD_TO_SELECTED_GROUP',
+                payload: {
+                    n: slotNumber,
+                    character: {
+                        name: item.name,
+                        prof: item.prof,
+                        lvl: item.lvl
+                    }
                 }
-            }
-        }),
+            })
+        },
         collect: (monitor) => ({
           isOver: !!monitor.isOver(),
         }),
@@ -108,7 +120,21 @@ const SelectedGroupSlot = ({ dispatch, character, slotNumber }: { dispatch: Reac
     )
 }
 
-const SelectedGroup = ({ state, dispatch, groupsListDispatch }: { state: IGroup, dispatch: React.Dispatch<TActionSelectedGroup>, groupsListDispatch: React.Dispatch<TActionGroupsList> }) => {
+const SelectedGroup = ({ state, dispatch, groupsListState, groupsListDispatch }: { state: IGroup, dispatch: React.Dispatch<TActionSelectedGroup>, groupsListState: IGroupsListState, groupsListDispatch: React.Dispatch<TActionGroupsList> }) => {
+
+    const [isErrorName, setIsErrorName] = useState(false)
+    const [nameMsg, setNameMsg] = useState('')
+
+    const handleAddToGroupsList = () => {
+        setIsErrorName(false)
+        setNameMsg('')
+        if (groupsListState.groupsList?.some(group => group.name === name)) {
+            setIsErrorName(true)
+            setNameMsg('Nazwa jest już zajęta.')
+        } else {
+            groupsListDispatch({ type: 'ADD_TO_GROUPS_LIST', payload: state })
+        }
+    }
 
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [name, setName] = useState(state.name ?? 'Nazwa grupy')
@@ -122,7 +148,7 @@ const SelectedGroup = ({ state, dispatch, groupsListDispatch }: { state: IGroup,
         <div className='flex flex-row justify-evenly'>
             <button 
                 className='rounded-md px-3 py-1 bg-green-500'
-                onClick={ () => groupsListDispatch({ type: 'ADD_TO_GROUPS_LIST', payload: state }) }
+                onClick={ handleAddToGroupsList }
             >
                 Zapisz
             </button>
@@ -135,6 +161,9 @@ const SelectedGroup = ({ state, dispatch, groupsListDispatch }: { state: IGroup,
         </div>
 
         <div className='flex flex-col space-y-3'>
+            <div className={ `text-secondary text-center h-6 ${ isErrorName ? 'text-red-500' : 'text-green-500' }` }>
+                { nameMsg }
+            </div>
             <div className='flex flex-row space-x-3 justify-center items-center h-[24px]'>
                 {
                     isEditOpen
