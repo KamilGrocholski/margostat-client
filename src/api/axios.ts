@@ -4,7 +4,8 @@ let baseURL
 if (process.env.NODE_ENV === 'development') {
     baseURL = 'http://localhost:5000/api'
 } else if (process.env.NODE_ENV === 'production') {
-    baseURL = process.env.BASE_URL as string;
+    // baseURL = process.env.BASE_URL as string;
+    baseURL = 'https://margostat-server.herokuapp.com/api'
 } else {
     baseURL = 'http://localhost:5000/api'
 }
