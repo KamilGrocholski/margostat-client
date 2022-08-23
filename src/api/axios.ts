@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-let baseURL = 'https://margostat-server.herokuapp.com/api'
-// let baseURL = 'http://localhost:5000/api'
+// let baseURL = 'https://margostat-server.herokuapp.com/api'
+let baseURL = 'http://localhost:5000/api'
 console.log(process.env.NODE_ENV)
 // if (process.env.NODE_ENV === 'development') {
 //   baseURL = 'http://localhost:5000/api'

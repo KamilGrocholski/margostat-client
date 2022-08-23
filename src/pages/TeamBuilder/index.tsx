@@ -17,13 +17,9 @@ import RefundIcon from '../../assets/svg/RefundIcon'
 import AddPersonIcon from '../../assets/svg/AddPersonIcon'
 import DocumentAddIcon from '../../assets/svg/DocumentAddIcon'
 import DocumentDownloadIcon from '../../assets/svg/DocumentDownloadIcon'
-import { useWindowDimentions } from '../../hooks/useWindowDimentions'
-import { TouchBackend } from 'react-dnd-touch-backend'
 
 
 const TeamBuilder = () => {
-
-    const windowDimentions = useWindowDimentions()
 
     const [filterState, filterDispatch] = useReducer(filterReducer, filterInitialState)
     const [groupsListState, groupsListDispatch] = useReducer(reducerGroupList, groupsListInitialState)
@@ -192,7 +188,7 @@ const TeamBuilder = () => {
     }, [filterState])
 
   return (
-    <DndProvider backend={windowDimentions.width && windowDimentions.width > 780 ? HTML5Backend : TouchBackend}>
+    <DndProvider backend={HTML5Backend}>
         {popupRestore && 
             <div className='fixed top-[68px] left-0 right-0 h-8 bg-green-500 text-black text-center font-semibold text-md z-40'>
                 Przywrócono sesję kreatora drużyny
