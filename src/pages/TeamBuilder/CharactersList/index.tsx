@@ -18,7 +18,7 @@ const CharacterItem = (props: ICharacter) => {
     return (
         <li 
             ref={ drag }
-            className={ `flex flex-row space-x-3 font-semibold text-sm items-center cursor-grab bg-dark-6/50 px-2 py-1 ${ isDragging && 'border border-sky-500'}` }
+            className={ `drop-shadow-lg flex flex-row space-x-3 font-semibold text-sm items-center cursor-grab bg-dark-6/50 px-2 py-1 ${ isDragging && 'border border-sky-500'}` }
         >
             <div>
                 { MARGONEM_CONSTS.PROFESSIONS[props.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useDrop } from 'react-dnd';
+import { useEffect, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import CheckIcon from '../../../assets/svg/CheckIcon';
 import EditIcon from '../../../assets/svg/EditIcon';
 import { MARGONEM_CONSTS } from '../../../constants/Margonem';
@@ -8,7 +8,73 @@ import { ICharacter, IGroup } from '../TeamBuilderTypes';
 import { TActionSelectedGroup } from './reducerSelectedGroup';
 
 const SelectedGroupSlot = ({ dispatch, character, slotNumber }: { dispatch: React.Dispatch<TActionSelectedGroup>, character: ICharacter | null, slotNumber: number }) => {
+    
+    const DragExchange = () => {
+        const [{ isOver }, drop] = useDrop(() => ({
+            accept: "div",
+            drop: (item: { n: number }) => {
+                dispatch({
+                    type: 'EXCHANGE_INSIDE_SELECTED_GROUP',
+                    payload: {
+                        from: item.n,
+                        to: slotNumber,
+                    }
+                })
+            },
+            collect: (monitor) => ({
+              isOver: !!monitor.isOver(),
+            }),
+          }))
 
+        return (
+            <div 
+                ref={ drop }
+                className='flex flex-row space-x-3 w-full font-semibold cursor-grab'
+            >
+                <div className='text-secondary flex items-center w-6 italic'>
+                    { slotNumber }
+                </div>
+                <div
+                    className={ `flex flex-row space-x-3 bg-dark-6/50 h-8 px-3 w-full py-1 ${ isOver && 'border border-sky-500' }` }
+                >
+                    <div className='flex flex-row space-x-3 items-center w-16'>
+                        <div>
+                            { character?.prof && MARGONEM_CONSTS.PROFESSIONS[character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
+                        </div>
+                        <div>
+                            { character?.lvl }
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            color: `${ character?.prof && MARGONEM_CONSTS.PROFESSIONS[character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].color }`
+                        }}
+                    >
+                        { character?.name }
+                    </div>
+                </div>
+                <button
+                    onClick={ () => dispatch({ type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: slotNumber } }) }
+                    className='text-red-500 text-xl text-center flex items-center h-full w-5 justify-center'
+                >
+                    &times;
+                </button>    
+            </div>
+        )
+    }
+
+    const [{ isDragging }, drag] = useDrag(() => (
+        {
+            type: "div",
+            item: {
+                n: slotNumber
+            },
+            collect: (monitor) => ({
+                isDragging: !!monitor.isDragging()
+            })
+        }
+    ))
+    
     const [{ isOver }, drop] = useDrop(() => ({
         accept: "li",
         drop: (item: ICharacter) => dispatch({
@@ -26,40 +92,18 @@ const SelectedGroupSlot = ({ dispatch, character, slotNumber }: { dispatch: Reac
           isOver: !!monitor.isOver(),
         }),
       }))
-
+      
     return (
         <li
             ref={ drop }
-            className='flex flex-row space-x-3 w-full font-semibold cursor-grab'
+            className={` w-full items-center flex ${ isOver && 'border border-sky-500' }`}
         > 
-            <div className='text-secondary flex items-center w-6 italic'>
-                { slotNumber }
-            </div>
-            <div
-                className={ `flex flex-row space-x-3 bg-dark-6/50 h-8 px-3 w-full py-1 ${ isOver && 'border border-sky-500' }` }
+            <div 
+                ref={ drag }
+                className={ `flex flex-row items-center space-x-3 bg-dark-6/50 h-8 px-3 w-full py-1 ${ isDragging && 'border border-sky-500' }` }
             >
-                <div className='flex flex-row space-x-3 items-center w-16'>
-                    <div>
-                        { character?.prof && MARGONEM_CONSTS.PROFESSIONS[character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
-                    </div>
-                    <div>
-                        { character?.lvl }
-                    </div>
-                </div>
-                <div
-                    style={{
-                        color: `${ character?.prof && MARGONEM_CONSTS.PROFESSIONS[character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].color }`
-                    }}
-                >
-                    { character?.name }
-                </div>
+                <DragExchange />
             </div>
-            <button
-                onClick={ () => dispatch({ type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: slotNumber } }) }
-                className='text-red-500 text-xl text-center flex items-center h-full'
-            >
-                &times;
-            </button>
         </li>
     )
 }
@@ -68,6 +112,9 @@ const SelectedGroup = ({ state, dispatch, groupsListDispatch }: { state: IGroup,
 
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [name, setName] = useState(state.name ?? 'Nazwa grupy')
+    useEffect(() => {
+        setName(state.name)
+    }, [state.name])
 
   return (
     <div className='flex flex-col space-y-28'>
@@ -91,7 +138,7 @@ const SelectedGroup = ({ state, dispatch, groupsListDispatch }: { state: IGroup,
             <div className='flex flex-row space-x-3 justify-center items-center h-[24px]'>
                 {
                     isEditOpen
-                        ? <input className='text-white bg-dark-8/90' value={ name } onChange={ e => setName(e.target.value) } />
+                        ? <input className='text-white bg-dark-8/90' value={ name } onChange={ e => { if (name.length <= 40) { setName(e.target.value) } } } />
                         : <div className='text-xl text-center font-semibold'>{ name }</div>
                 }
                 <button onClick={ () => setIsEditOpen(prev => !prev) }>

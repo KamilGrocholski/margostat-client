@@ -2,6 +2,7 @@ import { TCharactersList } from '../TeamBuilderTypes'
 
 export type TActionCharactersList = 
     | { type: 'ADD_CLAN_CHARACTERS', payload: TCharactersList }
+    | { type: 'ADD_OWN_CHARACTERS', payload: TCharactersList }
     | { type: 'GET_THE_LAST_SESSION', payload: TCharactersList }
 
 export interface ICLstate {
@@ -22,8 +23,25 @@ export const reducerCharacterList = (state: ICLstate, action: TActionCharactersL
                 return {
                     ...state,
                     charactersList: [
-                        ...state.charactersList,
-                        ...newChars
+                        ...newChars,
+                        ...state.charactersList
+                    ]
+                }
+            } else {
+                return {
+                    ...state
+                }
+            }
+        case 'ADD_OWN_CHARACTERS': //to samo, co ADD_CLAN_CHARACTERS, ale tak zrbione, żeby w przyszłości zmieniać
+            const newOwnChars = action.payload.map(char => {
+                return char
+            })
+            if (state.charactersList) {
+                return {
+                    ...state,
+                    charactersList: [
+                        ...newOwnChars,
+                        ...state.charactersList
                     ]
                 }
             } else {

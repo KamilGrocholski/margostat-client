@@ -7,6 +7,7 @@ export type TActionSelectedGroup =
     | { type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: IGroup }
     | { type: 'RESET_SELECTED_GROUP' }
     | { type: 'GET_THE_LAST_SESSION', payload: IGroup }
+    | { type: 'EXCHANGE_INSIDE_SELECTED_GROUP', payload: { from: number, to: number } }
 
 export const selectedGroupInitialState = {
     name: 'Nazwa grupy',
@@ -114,6 +115,18 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
             return {
                 name: action.payload.name,
                 slots: action.payload.slots
+            }
+        case 'EXCHANGE_INSIDE_SELECTED_GROUP': 
+            const from = state.slots[action.payload.from - 1]?.character
+            const to = state.slots[action.payload.to - 1]?.character
+            const newSlots = state.slots.map((slot, i) => {
+                if (i === action.payload.from - 1) return { n: i, character: to }
+                if (i === action.payload.to - 1) return { n: i, character: from }
+                return slot
+            })
+            return {
+                ...state,
+                slots: newSlots
             }
         default: 
             throw new Error()

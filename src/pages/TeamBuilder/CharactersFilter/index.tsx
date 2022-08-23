@@ -26,7 +26,7 @@ const Filter = ({ state, dispatch }: { state: IState, dispatch: any }) => {
   return (
     <div className='flex flex-col space-y-3 h-fit font-semibold text-white-1 border-b-2 border-gray-1/30 pb-3'>
         <div className='flex flex-col space-y-1'>
-            <label>Nazwa postaci</label>
+            <label htmlFor='name' className='text-secondary'>Nazwa postaci</label>
             <input 
                 id='name'
                 type='text'
@@ -37,7 +37,7 @@ const Filter = ({ state, dispatch }: { state: IState, dispatch: any }) => {
         </div>
         <div className='flex flex-row w-full'>
             <div className='flex flex-col space-y-1 w-full'>
-                <label htmlFor='minLvl'>Min</label>
+                <label htmlFor='minLvl' className='text-secondary'>Min</label>
                 <input
                     id='minLvl'
                     type='number'
@@ -47,7 +47,7 @@ const Filter = ({ state, dispatch }: { state: IState, dispatch: any }) => {
                 />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
-                <label htmlFor='maxLvl'>Max</label>
+                <label htmlFor='maxLvl' className='text-secondary'>Max</label>
                 <input
                     id='maxLvl'
                     type='number'

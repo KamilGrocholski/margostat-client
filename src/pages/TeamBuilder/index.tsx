@@ -14,9 +14,16 @@ import { characterListInitialState, reducerCharacterList } from './CharactersLis
 import { groupsListInitialState, reducerGroupList } from './GroupsList/reducerGroupList'
 import ArchiveIcon from '../../assets/svg/ArchiveIcon'
 import RefundIcon from '../../assets/svg/RefundIcon'
+import AddPersonIcon from '../../assets/svg/AddPersonIcon'
+import DocumentAddIcon from '../../assets/svg/DocumentAddIcon'
+import DocumentDownloadIcon from '../../assets/svg/DocumentDownloadIcon'
+import { useWindowDimentions } from '../../hooks/useWindowDimentions'
+import { TouchBackend } from 'react-dnd-touch-backend'
 
 
 const TeamBuilder = () => {
+
+    const windowDimentions = useWindowDimentions()
 
     const [filterState, filterDispatch] = useReducer(filterReducer, filterInitialState)
     const [groupsListState, groupsListDispatch] = useReducer(reducerGroupList, groupsListInitialState)
@@ -46,20 +53,77 @@ const TeamBuilder = () => {
     const [clanLink, setClanLink] = useState('')
 
     const [filteredChars, setFilteredChars] = useState<TCharactersList | null>(null)
-    
+    const [isClanCharsError, setIsClanCharsError] = useState(false)
+    const [clanCharsMsg, setClanCharsMsg] = useState('')
     const fetchClanChars = async (e: FormEvent) => {
+        setIsClanCharsError(false)
+        setClanCharsMsg('')
         try {
-            setIsLoading(true)
             e.preventDefault()
+            setIsLoading(true)
             const result = await getClan(clanLink)
-            if (result?.clanCharacters) {
+            if (result?.status === 'Success' && result?.clanCharacters) {
+                setClanLink('')
+                setClanCharsMsg('Pobieranie postaci zakończone.')
                 charactersListDispatch({ type: 'ADD_CLAN_CHARACTERS', payload: result.clanCharacters })
+            } else if (result?.status === 'Error') {
+                setIsClanCharsError(true)
+                if (result?.msg) {
+                    console.log(result.msg)
+                    setClanCharsMsg(result.msg)
+                }
+            } else {
+                setIsClanCharsError(true)
+                setClanCharsMsg('Nieprawidłowy odnośnik do strony klanowej.')
             }
             console.log(result)
         } catch (err) {
             console.log(err)
+            setIsClanCharsError(true)
+            setClanCharsMsg('Nieprawidłowy odnośnik do strony klanowej.')
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const [charForm, setCharForm] = useState({
+        name: '',
+        prof: 'Wojownik',
+        lvl: 1
+    })
+    const handleSetCharForm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, prof: string) => {
+        e.preventDefault()
+        setCharForm(prev => ({
+            ...prev,
+            prof: prof
+        }))
+    }
+
+
+    const [isOwnCharError, setIsOwnCharError] = useState(false)
+    const [ownCharMsg, setOwnCharMsg] = useState('')
+    const createOwnCharacters = (e: FormEvent) => {
+        setIsOwnCharError(false)
+        setOwnCharMsg('')
+        try {
+            e.preventDefault()
+            setIsLoading(true)
+            if (charForm.name === '' || charForm.prof === '' || !charForm.lvl) return 
+            if (charactersListState.charactersList?.some(char => char.name === charForm.name)) {
+                setIsOwnCharError(true)
+                setOwnCharMsg('Postać o takiej nazwie znajduje się już na liście.')
+                return
+            }
+            charactersListDispatch({ type: 'ADD_OWN_CHARACTERS', payload: [{ ...charForm }] })
+            setOwnCharMsg('Dodano postać.')
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setIsLoading(false)
+            setCharForm(prev => ({
+                ...prev,
+                name: ''
+            }))
         }
     }
     
@@ -72,7 +136,7 @@ const TeamBuilder = () => {
             }
             console.log(charactersListState.charactersList)
             charactersListState.charactersList.sort((a, b) => {
-                return a.prof.localeCompare(b.prof)
+                return a.prof.localeCompare(b.prof) || b.lvl - a.lvl
             })
             setFilteredChars(charactersListState.charactersList.filter(char => {
                 if (filterState?.name) {
@@ -128,26 +192,74 @@ const TeamBuilder = () => {
     }, [filterState])
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={windowDimentions.width && windowDimentions.width > 780 ? HTML5Backend : TouchBackend}>
+        {popupRestore && 
+            <div className='fixed top-[68px] left-0 right-0 h-8 bg-green-500 text-black text-center font-semibold text-md z-40'>
+                Przywrócono sesję kreatora drużyny
+            </div>
+        }
+        {popupSave && 
+            <div className='fixed top-[68px] left-0 right-0 h-8 bg-green-500 text-black text-center font-semibold text-md z-40'>
+                Sesja zapisana pomyślnie
+            </div>
+        }
         <div className='flex flex-col items-center justify-center space-y-3 mt-12'>
             {modal &&
                 <div className='fixed bottom-0 flex items-center justify-center left-0 right-0 top-0 backdrop-blur-sm z-[100]'>
-                    <div className='relative flex flex-col items-center justify-center w-1/4 bg-dark-8/90 p-3 h-1/3 shadow-sm shadow-black/30 space-y-3'>
-                        <button className='absolute top-0 right-2 text-2xl text-red-500' onClick={ () => setModal(false) }>
+                    <div className='relative flex flex-col items-center justify-center w-fit bg-dark-8/90 p-3 h-fit shadow-sm shadow-black/30 space-y-3'>
+                        <button className='absolute top-0 right-2 text-2xl text-red-500' onClick={ () => { setModal(false); setClanCharsMsg('') } }>
                             &times;
                         </button>
                         <form onSubmit={ fetchClanChars } className='flex items-center justify-center flex-col space-y-3'>
-                            <label className='font-semibold text-white-1'>Podaj link do strony klanowej</label>
-                            <input type='text' value={ clanLink } onChange={ e => setClanLink(e.target.value) } className='text-white-1 px-3 bg-dark-6/50' />
+                            <div className={ `text-xs text-secondary ${ isClanCharsError ? 'text-red-500' : 'text-green-500' }` }>
+                                { clanCharsMsg }
+                            </div>
+                            <label htmlFor='clanLink' className='font-semibold text-white-1'>Podaj link do strony klanowej</label>
+                            <input id='clanLink' type='text' value={ clanLink } onChange={ e => setClanLink(e.target.value) } className='text-white-1 px-3 bg-dark-6/50' />
                             <button disabled={ isLoading } type='submit' className={ `px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>Dodaj postacie z klanu</button>
+                        </form>
+                        <form onSubmit={ createOwnCharacters } className='flex items-center justify-center flex-col space-y-3'>
+                            <div className={ `text-xs text-secondary ${ isOwnCharError ? 'text-red-500' : 'text-green-500' }` }>
+                                { ownCharMsg }
+                            </div>
+                            <input placeholder={ 'Nazwa postaci' } type='text' value={ charForm.name } onChange={ e => setCharForm(prev => ({ ...prev, name: e.target.value })) } className='text-white-1 px-3 bg-dark-6/50' />
+                            <div className='flex flex-row space-x-3'>
+                                {Object.values(MARGONEM_CONSTS.PROFESSIONS).map((prof, i) => (
+                                    <button 
+                                        type='button'
+                                        key={ i }
+                                        id={ prof.name }
+                                        className={ `px-3 py-1 rounded-md border-dark-8/90 ${ charForm.prof !== prof.name && 'opacity-20' }` }
+                                        onClick={ e => handleSetCharForm(e, prof.name) }
+                                        style={{ backgroundImage: MARGONEM_CONSTS.PROFESSIONS[prof.name as keyof typeof MARGONEM_CONSTS.PROFESSIONS].gradient }}
+                                    >
+                                        <div>
+                                            { MARGONEM_CONSTS.PROFESSIONS[prof.name].icon }
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            <input placeholder='Poziom' type='number' value={ charForm.lvl } onChange={ e => setCharForm(prev => ({ ...prev, lvl: parseInt(e.target.value) })) } className='text-white-1 px-3 bg-dark-6/50' />
+                            <button disabled={ isLoading } type='submit' className={ `px-3 py-2 rounded-md border border-sky-500 w-full ${ isLoading && 'opacity-30' }` }>Stwórz postać</button>
                         </form>
                     </div>
                 </div>
             }
-            <div className='flex flex-row items-center justify-end p-3 space-x-12 bg-dark-8/90 rounded-lg w-full drop-shadow-lg shadow-sm shadow-black/30'>
-                <div>
-                    Bez ładu, ani składu, nie ma po tym nawet śladu.
-                </div>
+            <div className='flex flex-row items-center justify-evenly p-3 space-x-12 bg-dark-8/90 rounded-lg w-full drop-shadow-lg shadow-sm shadow-black/30'>
+                <button
+                    disabled={ true }
+                    className='opacity-30 flex flex-row space-x-2 items-center px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 w-fit h-10 text-sm text-secondary drop-shadow-lg'
+                >
+                    <div className='line-through'>Wczytaj sesję z JSON</div>
+                    <div><DocumentAddIcon /></div>
+                </button>
+                <button
+                    disabled={ true }
+                    className='opacity-30 flex flex-row space-x-2 items-center px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 w-fit h-10 text-sm text-secondary drop-shadow-lg'
+                >
+                    <div className='line-through'>Zapisz sesję jako JSON</div>
+                    <div><DocumentDownloadIcon /></div>
+                </button>
                 <button 
                     onClick={ () => {
                         const charsList = localStorage.getItem('teamBuilder__charactersList')
@@ -162,15 +274,10 @@ const TeamBuilder = () => {
                             handlePopups('restore')
                         } 
                     } }
-                    className='flex flex-row space-x-2 items-center px-3 py-1 border border-sky-500 rounded-md hover:bg-sky-500/50'
+                    className='flex flex-row space-x-2 items-center px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 w-fit h-10 text-sm text-secondary drop-shadow-lg'
                 >
                     <div>Przywróć ostatnią sesję</div>
-                    <div className='text-gray-500'><RefundIcon /></div>
-                    {popupRestore && 
-                        <div className='fixed -top-12 left-0 right-0 h-8 bg-green-500 text-black text-center font-semibold text-md z-40'>
-                            Przywrócono sesję kreatora drużyny
-                        </div>
-                    }
+                    <div><RefundIcon /></div>
                 </button>
                 <button 
                     onClick={ () => {
@@ -182,31 +289,26 @@ const TeamBuilder = () => {
                             localStorage.setItem('teamBuilder__groupsList', JSON.stringify(groupsListState))
                             handlePopups('save')
                         }
-                    } }
-                    className='flex flex-row space-x-2 items-center px-3 py-1 border border-sky-500 rounded-md hover:bg-sky-500/50'
+                    } } 
+                    className='flex flex-row space-x-2 items-center px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 w-fit h-10 text-sm text-secondary drop-shadow-lg'
                 >
                     <div>Zapisz sesję</div>
-                    <div className='text-gray-500'><ArchiveIcon /></div>
-                    {popupSave && 
-                        <div className='fixed -top-12 left-0 right-0 h-8 bg-green-500 text-black text-center font-semibold text-md z-40'>
-                            Sesja zapisana pomyślnie
-                        </div>
-                    }
+                    <div><ArchiveIcon /></div>
                 </button>
             </div>
             <div className='flex flex-row h-[75vh] space-x-3 w-full'>
                 <div className='flex flex-col w-1/4 p-3 space-y-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
                     <Filter state={ filterState } dispatch={ filterDispatch } />
                     <button 
-                        className='px-3 py-1 rounded-lg drop-shadow-lg border border-sky-500 w-full h-10'
+                        className='flex flex-row space-x-3 items-center justify-center text-secondary px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 drop-shadow-lg w-full h-10'
                         onClick={ () => setModal(true) }
                     >
-                        Dodaj postacie
+                        <div>Dodaj postacie</div>
+                        <div><AddPersonIcon /></div>
                     </button>
                     <CharactersList chars={ filteredChars ?? null } />
                 </div>
                 <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
-                    <button>Wyślij jako 'embed' na discorda!</button>
                     <SelectedGroup state={ selectedGroupState } dispatch={ selectedGroupDispatch } groupsListDispatch={ groupsListDispatch } />
                 </div>
                 <div className='flex flex-col grow p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
