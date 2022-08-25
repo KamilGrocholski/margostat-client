@@ -1,4 +1,3 @@
-import EditIcon from '../../../assets/svg/EditIcon'
 import XCircleIcon from '../../../assets/svg/XCircleIcon'
 import { MARGONEM_CONSTS } from '../../../constants/Margonem'
 import { TActionSelectedGroup } from '../SelectedGroup/reducerSelectedGroup'
@@ -7,6 +6,7 @@ import { TActionGroupsList } from './reducerGroupList'
 import { toPng } from 'html-to-image'
 import { useRef, useCallback } from 'react'
 import DownloadIcon from '../../../assets/svg/DownloadIcon'
+import CopyIcon from '../../../assets/svg/CopyIcon'
 
 interface IGroupProps extends IGroup {
     groupsListDispatch: React.Dispatch<TActionGroupsList>
@@ -44,7 +44,7 @@ const Group = (props: IGroupProps) => {
                     className='absolute -top-1 text-gray-500 left-0 dni'
                     onClick={ () => props.selectedGroupDispatch({ type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } }) }
                 >
-                    <EditIcon />
+                    <CopyIcon />
                 </button>
                 <button
                     className='absolute -top-1 text-gray-500 left-10 dni'
