@@ -39,25 +39,21 @@ export const filterInitialState = {
 export const filterReducer = (state: IState, action: TAction): IState => {
     switch (action.type) {
         case 'changeMin': 
-            console.log(action.payload)
             return {
                 ...state,
                 minLvl: action.payload
             }
         case 'changeMax': 
-            console.log(action.payload)
             return {
                 ...state,
                 maxLvl: action.payload
             }
         case 'changeName':
-            console.log(action.payload)
             return {
                 ...state,
                 name: action.payload
             }
         case 'selectProf':
-            console.log(action.payload)
             return {
                 ...state,
                 profs: {

@@ -65,14 +65,12 @@ const TeamBuilder = () => {
             } else if (result?.status === 'Error') {
                 setIsClanCharsError(true)
                 if (result?.msg) {
-                    console.log(result.msg)
                     setClanCharsMsg(result.msg)
                 }
             } else {
                 setIsClanCharsError(true)
                 setClanCharsMsg('Nieprawidłowy odnośnik do strony klanowej.')
             }
-            console.log(result)
         } catch (err) {
             console.log(err)
             setIsClanCharsError(true)
@@ -137,7 +135,6 @@ const TeamBuilder = () => {
         let first = true
         const applyFilter = () => {
             if (charactersListState?.charactersList === null || charactersListState?.charactersList === undefined) {
-                console.log('brak')
                 return
             }
             charactersListState.charactersList.forEach(char => {
@@ -150,7 +147,6 @@ const TeamBuilder = () => {
                     })
                 })
             })
-            console.log(charactersListState.charactersList)
             charactersListState.charactersList.sort((a, b) => {
                 return a.prof.localeCompare(b.prof) || b.lvl - a.lvl
             })

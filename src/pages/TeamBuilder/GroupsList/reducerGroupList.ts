@@ -23,7 +23,6 @@ export const reducerGroupList = (state: IGroupsListState, action: TActionGroupsL
                 ]
             }
             if (state.groupsList.some(grp => grp.name === action.payload.name)) {
-                console.log('Nazwa jest już zajęta')
                 return {...state}
             }
             return {
