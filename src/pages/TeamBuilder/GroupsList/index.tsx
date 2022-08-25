@@ -11,6 +11,7 @@ import DownloadIcon from '../../../assets/svg/DownloadIcon'
 interface IGroupProps extends IGroup {
     groupsListDispatch: React.Dispatch<TActionGroupsList>
     selectedGroupDispatch: React.Dispatch<TActionSelectedGroup>
+    checkUsedCharacters: (name: string) => void
 }
 const Group = (props: IGroupProps) => {
 
@@ -56,7 +57,7 @@ const Group = (props: IGroupProps) => {
                 </div>
                 <button 
                     className='absolute -top-1 text-red-500 right-0 dni'
-                    onClick={ () => props.groupsListDispatch({ type: 'REMOVE_GROUP_FROM_GROUPS_LIST', payload: { name: props.name } }) }
+                    onClick={ () => { props.groupsListDispatch({ type: 'REMOVE_GROUP_FROM_GROUPS_LIST', payload: { name: props.name } }); props.checkUsedCharacters(props.name) } }
                 >
                     <XCircleIcon />
                 </button>
@@ -92,7 +93,7 @@ const Group = (props: IGroupProps) => {
     )
 }
 
-const GroupList = ({ groups, groupsListDispatch, selectedGroupDispatch }: { groups: TGroupsList | null, groupsListDispatch: React.Dispatch<TActionGroupsList>, selectedGroupDispatch: React.Dispatch<TActionSelectedGroup> }) => {
+const GroupList = ({ checkUsedCharacters, groups, groupsListDispatch, selectedGroupDispatch }: { checkUsedCharacters: (name: string) => void, groups: TGroupsList | null, groupsListDispatch: React.Dispatch<TActionGroupsList>, selectedGroupDispatch: React.Dispatch<TActionSelectedGroup> }) => {
 
     const ref = useRef<HTMLOListElement>(null)
 
@@ -130,6 +131,7 @@ const GroupList = ({ groups, groupsListDispatch, selectedGroupDispatch }: { grou
                         { ...group }
                         groupsListDispatch={ groupsListDispatch }
                         selectedGroupDispatch={ selectedGroupDispatch }
+                        checkUsedCharacters={ checkUsedCharacters }
                     />
                 ))} 
             </ul>

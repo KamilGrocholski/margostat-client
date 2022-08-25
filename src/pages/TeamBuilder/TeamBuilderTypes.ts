@@ -1,7 +1,8 @@
 export interface ICharacter {
     name: string
     prof: string
-    lvl: number
+    lvl: number,
+    nUsed: number
 }
 
 export type TCharactersList = ICharacter[]

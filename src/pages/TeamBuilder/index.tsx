@@ -17,7 +17,6 @@ import RefundIcon from '../../assets/svg/RefundIcon'
 import AddPersonIcon from '../../assets/svg/AddPersonIcon'
 import DocumentAddIcon from '../../assets/svg/DocumentAddIcon'
 import DocumentDownloadIcon from '../../assets/svg/DocumentDownloadIcon'
-import Loader from '../../components/Loader'
 
 
 const TeamBuilder = () => {
@@ -86,7 +85,8 @@ const TeamBuilder = () => {
     const [charForm, setCharForm] = useState({
         name: '',
         prof: 'Wojownik',
-        lvl: 1
+        lvl: 1,
+        nUsed: 0
     })
     const handleSetCharForm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, prof: string) => {
         e.preventDefault()
@@ -123,7 +123,16 @@ const TeamBuilder = () => {
             }))
         }
     }
-    
+
+    const removeUsedCharacters = (groupName: string) => {
+        const currentGroup = groupsListState.groupsList?.find(group => group.name === groupName)
+        currentGroup?.slots?.forEach(slot => {
+            charactersListState.charactersList?.forEach(char => {
+                if (char.name === slot.character?.name && char.nUsed !== 0) char.nUsed--
+            })
+        })
+    }
+
     useEffect(() => {
         let first = true
         const applyFilter = () => {
@@ -131,6 +140,16 @@ const TeamBuilder = () => {
                 console.log('brak')
                 return
             }
+            charactersListState.charactersList.forEach(char => {
+                char.nUsed = 0
+                groupsListState.groupsList?.forEach(group => {
+                    group.slots.forEach(slot => {
+                        if (slot.character?.name === char.name) {
+                            char.nUsed += 1
+                        }
+                    })
+                })
+            })
             console.log(charactersListState.charactersList)
             charactersListState.charactersList.sort((a, b) => {
                 return a.prof.localeCompare(b.prof) || b.lvl - a.lvl
@@ -153,12 +172,12 @@ const TeamBuilder = () => {
             applyFilter()
         }
 
-
         return () => {
             first = false
         }
 
-    }, [charactersListState.charactersList])
+    }, [charactersListState.charactersList, groupsListState.groupsList])
+
 
     useEffect(() => {
         let first = true
@@ -209,7 +228,7 @@ const TeamBuilder = () => {
                         </button>
                         <div className='flex flex-row space-x-24'>
                             <form onSubmit={ fetchClanChars } className='text-secondary flex flex-col space-y-3 w-80 h-full justify-between'>
-                                <div className={ `text-xs text-secondary ${ isClanCharsError ? 'text-red-500' : 'text-green-500' }` }>
+                                <div className={ `text-center text-xs text-secondary ${ isClanCharsError ? 'text-red-500' : 'text-green-500' }` }>
                                     { clanCharsMsg }
                                 </div>
                                 <label htmlFor='clanLink' className='font-semibold'>Podaj link do strony klanowej</label>
@@ -318,7 +337,7 @@ const TeamBuilder = () => {
                     <SelectedGroup state={ selectedGroupState } dispatch={ selectedGroupDispatch } groupsListState={ groupsListState } groupsListDispatch={ groupsListDispatch } />
                 </div>
                 <div className='flex flex-col w-[35%] p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
-                    <GroupList groups={ groupsListState.groupsList ?? null } groupsListDispatch={ groupsListDispatch } selectedGroupDispatch={ selectedGroupDispatch } />
+                    <GroupList checkUsedCharacters={ removeUsedCharacters } groups={ groupsListState.groupsList ?? null } groupsListDispatch={ groupsListDispatch } selectedGroupDispatch={ selectedGroupDispatch } />
                 </div>
             </div>
         </div>

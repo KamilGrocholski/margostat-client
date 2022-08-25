@@ -95,7 +95,8 @@ const SelectedGroupSlot = (
                     character: {
                         name: item.name,
                         prof: item.prof,
-                        lvl: item.lvl
+                        lvl: item.lvl,
+                        nUsed: item.nUsed
                     }
                 }
             })
