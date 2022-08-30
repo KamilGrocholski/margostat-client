@@ -62,11 +62,11 @@ const Group = (props: IGroupProps) => {
                     <XCircleIcon />
                 </button>
             </div>
-            <ul className='flex flex-col space-y-1'>
+            <ul className='flex flex-col'>
                 {props.slots.map((slot, i) => (
                     <li 
                         key={ i }
-                        className={ `items-center font-semibold h-6 flex flex-row space-x-3 px-3 ${ i % 2 !== 0 && 'bg-dark-6/50' }` }
+                        className={ `items-center font-semibold h-6 flex flex-row py-4 space-x-3 px-3 ${ i % 2 !== 0 && 'bg-dark-6/50' }` }
                     >
                         <div className='text-secondary italic w-6'>
                             { slot.n + 1 }

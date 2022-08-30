@@ -60,11 +60,8 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
         case 'ADD_TO_SELECTED_GROUP':
             if (state.slots.length > 10 || action.payload.n > 10 || action.payload.n < 1) return {...state}
             if (state.slots.some(slot => slot.character?.name === action.payload.character.name)) {
-                console.log('Postać o takiej nazwie jest już w tej grupie.')
                 return {...state}
             }
-            console.log(state)
-            console.log(action.payload)
             return {
                 ...state,
                 slots: state.slots.map((slot, i) => {

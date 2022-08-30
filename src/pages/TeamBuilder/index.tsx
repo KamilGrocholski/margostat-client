@@ -6,7 +6,7 @@ import CharactersList from './CharactersList'
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import GroupList from './GroupsList'
-import { TCharactersList } from './TeamBuilderTypes'
+import { ICharacter, TCharactersList } from './TeamBuilderTypes'
 import SelectedGroup from './SelectedGroup'
 import { selectedGroupInitialState, reducerSelectedGroup } from './SelectedGroup/reducerSelectedGroup'
 import { getClan } from '../../api/teamBuilderAPI'
@@ -80,7 +80,7 @@ const TeamBuilder = () => {
         }
     }
 
-    const [charForm, setCharForm] = useState({
+    const [charForm, setCharForm] = useState<ICharacter>({
         name: '',
         prof: 'Wojownik',
         lvl: 1,
@@ -93,7 +93,6 @@ const TeamBuilder = () => {
             prof: prof
         }))
     }
-
 
     const [isOwnCharError, setIsOwnCharError] = useState(false)
     const [ownCharMsg, setOwnCharMsg] = useState('')
@@ -117,7 +116,8 @@ const TeamBuilder = () => {
             setIsLoading(false)
             setCharForm(prev => ({
                 ...prev,
-                name: ''
+                name: '',
+                lvl: 1
             }))
         }
     }
@@ -242,7 +242,13 @@ const TeamBuilder = () => {
                                 <label htmlFor='charNameInput'>Nazwa postaci</label>
                                 <input id='charNameInput' type='text' value={ charForm.name } onChange={ e => setCharForm(prev => ({ ...prev, name: e.target.value })) } className='text-white-1 px-3 bg-dark-6/50' />
                                 <label htmlFor='charLvlInput'>Poziom</label>
-                                <input id='charLvlInput' type='number' value={ charForm.lvl } onChange={ e => setCharForm(prev => ({ ...prev, lvl: parseInt(e.target.value) })) } className='text-white-1 px-3 bg-dark-6/50' />
+                                <input 
+                                    id='charLvlInput' type='number' 
+                                    value={ charForm.lvl } 
+                                    onChange={ e => setCharForm(prev => ({ ...prev, lvl: parseInt(e.target.value) })) } 
+                                    onFocus={ e => e.target.select() }
+                                    className='text-white-1 px-3 bg-dark-6/50' 
+                                />
                                 <label htmlFor='charProfMenu'>Profesja</label>
                                 <div id='charProfMenu' className='flex flex-row space-x-3'>
                                     {Object.values(MARGONEM_CONSTS.PROFESSIONS).map((prof, i) => (
