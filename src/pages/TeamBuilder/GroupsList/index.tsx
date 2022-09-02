@@ -22,7 +22,7 @@ const Group = (props: IGroupProps) => {
           return
         }
 
-        toPng(refGroup.current, { cacheBust: true })
+        toPng(refGroup.current, { cacheBust: false })
         .then((dataUrl) => {
             const link = document.createElement('a')
             link.download = `${ props.name } (${ new Date().toISOString().slice(0, 10) }).png`
@@ -32,7 +32,7 @@ const Group = (props: IGroupProps) => {
           .catch((err) => {
             console.log(err)
           })
-      }, [refGroup])
+      }, [refGroup, props.name])
 
     return (
         <li    
@@ -93,7 +93,19 @@ const Group = (props: IGroupProps) => {
     )
 }
 
-const GroupList = ({ checkUsedCharacters, groups, groupsListDispatch, selectedGroupDispatch }: { checkUsedCharacters: (name: string) => void, groups: TGroupsList | null, groupsListDispatch: React.Dispatch<TActionGroupsList>, selectedGroupDispatch: React.Dispatch<TActionSelectedGroup> }) => {
+const GroupList = (
+    { 
+        checkUsedCharacters, 
+        groups, 
+        groupsListDispatch, 
+        selectedGroupDispatch 
+    }
+    : { 
+        checkUsedCharacters: (name: string) => void, 
+        groups: TGroupsList | null, 
+        groupsListDispatch: React.Dispatch<TActionGroupsList>, 
+        selectedGroupDispatch: React.Dispatch<TActionSelectedGroup> 
+    }) => {
 
     const ref = useRef<HTMLOListElement>(null)
 

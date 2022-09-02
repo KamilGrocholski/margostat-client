@@ -79,5 +79,5 @@ export const MARGONEM_CONSTS = {
         'Tempest',
         'Zemyna',
         'Zorza',
-    ]
+    ] as const,
 }
