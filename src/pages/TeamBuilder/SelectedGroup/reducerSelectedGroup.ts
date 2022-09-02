@@ -4,7 +4,7 @@ export type TActionSelectedGroup =
     | { type: 'ADD_TO_SELECTED_GROUP', payload: { n: number, character: ICharacter } }
     | { type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: number } }   
     | { type: 'CHANGE_NAME_OF_SELECTED_GROUP', payload: { name: string } }
-    | { type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: IGroup }
+    | { type: 'COPY_GROUP_FROM_GROUPS_LIST', payload: IGroup }
     | { type: 'RESET_SELECTED_GROUP' }
     | { type: 'GET_THE_LAST_SESSION', payload: IGroup }
     | { type: 'EXCHANGE_INSIDE_SELECTED_GROUP', payload: { from: number, to: number } }
@@ -60,7 +60,7 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
         case 'ADD_TO_SELECTED_GROUP':
             if (state.slots.length > 10 || action.payload.n > 10 || action.payload.n < 1) return {...state}
             if (state.slots.some(slot => slot.character?.name === action.payload.character.name)) {
-                return {...state}
+                return state
             }
             return {
                 ...state,
@@ -92,7 +92,7 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
                 ...state,
                 name: action.payload.name
             }
-        case 'EDIT_GROUP_FROM_GROUPS_LIST': 
+        case 'COPY_GROUP_FROM_GROUPS_LIST': 
             return {
                 ...state,
                 name: action.payload.name,

@@ -17,17 +17,27 @@ import RefundIcon from '../../assets/svg/RefundIcon'
 import AddPersonIcon from '../../assets/svg/AddPersonIcon'
 import DocumentAddIcon from '../../assets/svg/DocumentAddIcon'
 import DocumentDownloadIcon from '../../assets/svg/DocumentDownloadIcon'
+import EditGroup from './EditGroup'
+import { editGroupInitialState, reducerEditGroup } from './EditGroup/reducerEditGroup'
 
+
+export type TMode = 'creating' | 'editing'
 
 const TeamBuilder = () => {
 
     const [filterState, filterDispatch] = useReducer(filterReducer, filterInitialState)
     const [groupsListState, groupsListDispatch] = useReducer(reducerGroupList, groupsListInitialState)
     const [selectedGroupState, selectedGroupDispatch] = useReducer(reducerSelectedGroup, selectedGroupInitialState)
+    const [editGroupState, editGroupDispatch] = useReducer(reducerEditGroup, editGroupInitialState)
     const [charactersListState, charactersListDispatch] = useReducer(reducerCharacterList, characterListInitialState)
-    
+
     const [modal, setModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+
+    const [mode, setMode] = useState<TMode>('creating')
+    const handleChangeMode = (mode: TMode) => {
+        setMode(mode)
+    }
 
     const [popupRestore, setPopupRestore] = useState(false)
     const [popupSave, setPopupSave] = useState(false)
@@ -329,17 +339,48 @@ const TeamBuilder = () => {
                     <button 
                         className='flex flex-row space-x-3 items-center justify-center text-secondary px-3 py-1 rounded bg-dark-6/90 hover:text-sky-500 drop-shadow-lg w-full h-10'
                         onClick={ () => setModal(true) }
-                    >
+                    >       
                         <div>Dodaj postacie</div>
                         <div><AddPersonIcon /></div>
                     </button>
                     <CharactersList chars={ filteredChars ?? null } />
                 </div>
-                <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
-                    <SelectedGroup state={ selectedGroupState } dispatch={ selectedGroupDispatch } groupsListState={ groupsListState } groupsListDispatch={ groupsListDispatch } />
+                <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30 overflow-scroll'>
+                    <div className='flex flex-row w-full mb-12 space-x-3'>
+                        <button 
+                            onClick={ () => handleChangeMode('creating') }
+                            className={ `py-1 hover:text-sky-500 text-secondary w-1/2 border border-sky-500 rounded-md ${ mode !== 'creating' && 'opacity-30' }` }
+                        >Tworzenie</button>
+                        <button 
+                            onClick={ () => handleChangeMode('editing') }
+                            className={ `py-1 hover:text-sky-500 text-secondary w-1/2 border border-sky-500 rounded-md ${ mode !== 'editing' && 'opacity-30' }` }
+                        >Edytowanie</button>
+                    </div>
+                    <SelectedGroup 
+                        isHidden={ mode !== 'creating' }
+                        state={ selectedGroupState } 
+                        dispatch={ selectedGroupDispatch } 
+                        groupsListState={ groupsListState } 
+                        groupsListDispatch={ groupsListDispatch } 
+                    />
+                    <EditGroup 
+                        isHidden={ mode !== 'editing' }
+                        state={ editGroupState.editGroup }
+                        origin={ editGroupState.originGroup } 
+                        dispatch={ editGroupDispatch }
+                        groupsListState={ groupsListState }
+                        groupsListDispatch={ groupsListDispatch }
+                    />
                 </div>
                 <div className='flex flex-col w-[35%] p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
-                    <GroupList checkUsedCharacters={ removeUsedCharacters } groups={ groupsListState.groupsList ?? null } groupsListDispatch={ groupsListDispatch } selectedGroupDispatch={ selectedGroupDispatch } />
+                    <GroupList 
+                        setMode={ setMode }
+                        checkUsedCharacters={ removeUsedCharacters } 
+                        groups={ groupsListState.groupsList ?? null } 
+                        groupsListDispatch={ groupsListDispatch } 
+                        selectedGroupDispatch={ selectedGroupDispatch }
+                        editGroupDispatch={ editGroupDispatch }
+                    />
                 </div>
             </div>
         </div>

@@ -1,9 +1,7 @@
-import React from 'react'
-
 const Page404 = () => {
   return (
     <div>
-        Błąd 404
+        Nie znaleziono strony
     </div>
   )
 }

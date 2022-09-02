@@ -1,4 +1,3 @@
-import React from 'react'
 import { TrendingUpIcon, TrendingDownIcon } from '../assets/svg/TrendingIcons'
 
 const Trending = ({ value, iconSize }: { value: number, iconSize: number }) => {

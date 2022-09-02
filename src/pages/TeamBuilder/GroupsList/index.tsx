@@ -7,11 +7,16 @@ import { toPng } from 'html-to-image'
 import { useRef, useCallback } from 'react'
 import DownloadIcon from '../../../assets/svg/DownloadIcon'
 import CopyIcon from '../../../assets/svg/CopyIcon'
+import { TActionEditGroup } from '../EditGroup/reducerEditGroup'
+import EditIcon from '../../../assets/svg/EditIcon'
+import { TMode } from '..'
 
 interface IGroupProps extends IGroup {
     groupsListDispatch: React.Dispatch<TActionGroupsList>
     selectedGroupDispatch: React.Dispatch<TActionSelectedGroup>
-    checkUsedCharacters: (name: string) => void
+    editGroupDispatch: React.Dispatch<TActionEditGroup>
+    checkUsedCharacters: (name: string) => void,
+    setMode: React.Dispatch<React.SetStateAction<TMode>>
 }
 const Group = (props: IGroupProps) => {
 
@@ -42,12 +47,24 @@ const Group = (props: IGroupProps) => {
             <div className='relative flex items-center justify-center font-semibold text-xl mb-3'>
                 <button 
                     className='absolute -top-1 text-gray-500 left-0 dni'
-                    onClick={ () => props.selectedGroupDispatch({ type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } }) }
+                    onClick={ () => { 
+                        props.selectedGroupDispatch({ type: 'COPY_GROUP_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } }) 
+                        props.setMode('creating')
+                    }}
                 >
                     <CopyIcon />
                 </button>
                 <button
                     className='absolute -top-1 text-gray-500 left-10 dni'
+                    onClick={ () => {
+                        props.editGroupDispatch({ type: 'COPY_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } })
+                        props.setMode('editing')
+                    }}
+                >
+                    <EditIcon />
+                </button>
+                <button
+                    className='absolute -top-1 text-gray-500 left-20 dni'
                     onClick={ handleHtmlToImage }
                 >
                     <DownloadIcon />
@@ -98,13 +115,17 @@ const GroupList = (
         checkUsedCharacters, 
         groups, 
         groupsListDispatch, 
-        selectedGroupDispatch 
+        selectedGroupDispatch ,
+        editGroupDispatch,
+        setMode
     }
     : { 
         checkUsedCharacters: (name: string) => void, 
         groups: TGroupsList | null, 
         groupsListDispatch: React.Dispatch<TActionGroupsList>, 
-        selectedGroupDispatch: React.Dispatch<TActionSelectedGroup> 
+        selectedGroupDispatch: React.Dispatch<TActionSelectedGroup>,
+        editGroupDispatch: React.Dispatch<TActionEditGroup>,
+        setMode: React.Dispatch<React.SetStateAction<TMode>>
     }) => {
 
     const ref = useRef<HTMLOListElement>(null)
@@ -144,6 +165,8 @@ const GroupList = (
                         groupsListDispatch={ groupsListDispatch }
                         selectedGroupDispatch={ selectedGroupDispatch }
                         checkUsedCharacters={ checkUsedCharacters }
+                        editGroupDispatch={ editGroupDispatch }
+                        setMode={ setMode }
                     />
                 ))} 
             </ul>

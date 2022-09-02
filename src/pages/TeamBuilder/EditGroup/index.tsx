@@ -5,16 +5,16 @@ import EditIcon from '../../../assets/svg/EditIcon';
 import { MARGONEM_CONSTS } from '../../../constants/Margonem';
 import { IGroupsListState, TActionGroupsList } from '../GroupsList/reducerGroupList';
 import { ICharacter, IGroup } from '../TeamBuilderTypes';
-import { TActionSelectedGroup } from './reducerSelectedGroup';
+import { TActionEditGroup } from './reducerEditGroup';
 
-const SelectedGroupSlot = (
+const EditGroupSlot = (
     { 
         dispatch, 
         character, 
         slotNumber
     }: 
     { 
-        dispatch: React.Dispatch<TActionSelectedGroup>, 
+        dispatch: React.Dispatch<TActionEditGroup>, 
         character: ICharacter | null, 
         slotNumber: number
     }) => {
@@ -24,7 +24,7 @@ const SelectedGroupSlot = (
             accept: "div",
             drop: (item: { n: number }) => {
                 dispatch({
-                    type: 'EXCHANGE_INSIDE_SELECTED_GROUP',
+                    type: 'EXCHANGE_INSIDE_EDIT_GROUP',
                     payload: {
                         from: item.n,
                         to: slotNumber,
@@ -64,7 +64,7 @@ const SelectedGroupSlot = (
                     </div>
                 </div>
                 <button
-                    onClick={ () => dispatch({ type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: slotNumber } }) }
+                    onClick={ () => dispatch({ type: 'REMOVE_ONE_FROM_EDIT_GROUP', payload: { n: slotNumber } }) }
                     className='text-red-500 text-xl text-center flex items-center h-full w-5 justify-center'
                 >
                     &times;
@@ -89,7 +89,7 @@ const SelectedGroupSlot = (
         accept: "li",
         drop: (item: ICharacter) => {
             dispatch({
-                type: 'ADD_TO_SELECTED_GROUP',
+                type: 'ADD_TO_EDIT_GROUP',
                 payload: {
                     n: slotNumber,
                     character: {
@@ -121,41 +121,45 @@ const SelectedGroupSlot = (
     )
 }
 
-const SelectedGroup = (
+const EditGroup = (
     { 
         isHidden,
         state, 
+        origin,
         dispatch, 
         groupsListState, 
-        groupsListDispatch 
+        groupsListDispatch,
     }: 
     { 
         isHidden: boolean,
-        state: IGroup, 
-        dispatch: React.Dispatch<TActionSelectedGroup>, 
+        state: IGroup | null, 
+        origin: IGroup | null,
+        dispatch: React.Dispatch<TActionEditGroup>, 
         groupsListState: IGroupsListState, 
-        groupsListDispatch: React.Dispatch<TActionGroupsList> 
+        groupsListDispatch: React.Dispatch<TActionGroupsList> ,
     }) => {
 
     const [isErrorName, setIsErrorName] = useState(false)
     const [nameMsg, setNameMsg] = useState('')
 
-    const handleAddToGroupsList = () => {
+    const handleEditGroup = () => {
         setIsErrorName(false)
         setNameMsg('')
-        if (groupsListState.groupsList?.some(group => group.name === name)) {
+        if (!state || !origin?.name) return 
+        if (groupsListState.groupsList?.some(group => group.name === state.name && group.name !== origin.name)) {
             setIsErrorName(true)
             setNameMsg('Nazwa jest już zajęta.')
-        } else {
-            groupsListDispatch({ type: 'ADD_TO_GROUPS_LIST', payload: state })
+            return 
         }
+        groupsListDispatch({ type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: { newGroup: state, originName: origin.name } })
     }
 
     const [isEditOpen, setIsEditOpen] = useState(false)
-    const [name, setName] = useState(state.name ?? 'Nazwa grupy')
+    const [name, setName] = useState(state?.name ?? 'Nazwa grupy')
     useEffect(() => {
+        if (state)
         setName(state.name)
-    }, [state.name])
+    }, [state?.name])
 
   return (
     <div className={ `flex flex-col justify-around h-full ${ isHidden && 'hidden' }` }>
@@ -163,19 +167,22 @@ const SelectedGroup = (
         <div className='flex flex-row justify-evenly'>
             <button 
                 className='rounded-md px-3 py-1 bg-green-500'
-                onClick={ handleAddToGroupsList }
+                onClick={ handleEditGroup }
             >
-                Utwórz grupę
+                Zapisz zmiany
             </button>
             <button 
                 className='rounded-md px-3 py-1 bg-yellow-500'
-                onClick={ () => dispatch({ type: 'RESET_SELECTED_GROUP' }) }
+                onClick={ () => dispatch({ type: 'RESET_EDIT_GROUP' }) }
             >
                 Resetuj
             </button>
         </div>
 
         <div className='flex flex-col space-y-3'>
+            <div className='text-center'>
+                <p className='text-secondary'>Edytujesz grupę: <span className='text-lg text-yellow-500'>{ origin?.name }</span></p>
+            </div>
             <div className={ `text-secondary text-center h-6 ${ isErrorName ? 'text-red-500' : 'text-green-500' }` }>
                 { nameMsg }
             </div>
@@ -187,14 +194,14 @@ const SelectedGroup = (
                 }
                 <button onClick={ () => setIsEditOpen(prev => !prev) }>
                     {isEditOpen
-                        ? <div onClick={ () => dispatch({ type: 'CHANGE_NAME_OF_SELECTED_GROUP', payload: { name: name } }) }><CheckIcon /></div>
+                        ? <div onClick={ () => dispatch({ type: 'CHANGE_NAME_OF_EDIT_GROUP', payload: { name: name } }) }><CheckIcon /></div>
                         : <div className='text-gray-500'><EditIcon /></div>
                     }
                 </button>
             </div>
             <ul className='space-y-1'>
-                {state.slots.map((slot, i) => (
-                    <SelectedGroupSlot 
+                {state?.slots.map((slot, i) => (
+                    <EditGroupSlot 
                         key={ i }
                         dispatch={ dispatch }
                         slotNumber={ i + 1 }
@@ -208,4 +215,4 @@ const SelectedGroup = (
   )
 }
 
-export default SelectedGroup
+export default EditGroup
