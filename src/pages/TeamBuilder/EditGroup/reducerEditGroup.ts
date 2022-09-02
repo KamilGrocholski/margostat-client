@@ -8,6 +8,7 @@ export type TActionEditGroup =
     | { type: 'EXCHANGE_INSIDE_EDIT_GROUP', payload: { from: number, to: number } }
     | { type: 'CHANGE_NAME_OF_EDIT_GROUP', payload: { name: string } }
     | { type: 'RESET_EDIT_GROUP' }
+    | { type: 'CHANGE_ORIGIN_GROUP' }
 
 export interface IEditGroupState {
     originGroup: IGroup | null
@@ -102,6 +103,12 @@ export const reducerEditGroup = (state: IEditGroupState, action: TActionEditGrou
                         }
                     ))
                 }
+            }
+        case 'CHANGE_ORIGIN_GROUP': 
+            if (!state.editGroup) return state
+            return {
+                ...state,
+                originGroup: state.editGroup
             }
         default: 
             throw new Error()

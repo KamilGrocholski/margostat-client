@@ -152,6 +152,7 @@ const EditGroup = (
             return 
         }
         groupsListDispatch({ type: 'EDIT_GROUP_FROM_GROUPS_LIST', payload: { newGroup: state, originName: origin.name } })
+        dispatch({ type: 'CHANGE_ORIGIN_GROUP' })
     }
 
     const [isEditOpen, setIsEditOpen] = useState(false)
