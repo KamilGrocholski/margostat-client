@@ -345,7 +345,7 @@ const TeamBuilder = () => {
                     </button>
                     <CharactersList chars={ filteredChars ?? null } />
                 </div>
-                <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30 overflow-scroll'>
+                <div className='flex flex-col w-2/5 p-3 bg-dark-8/90 rounded-lg  drop-shadow-lg shadow-sm shadow-black/30'>
                     <div className='flex flex-row w-full mb-12 space-x-3'>
                         <button 
                             onClick={ () => handleChangeMode('creating') }
