@@ -6,7 +6,7 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
     // baseURL = process.env.BASE_URL
     // baseURL = 'https://margostat-server.herokuapp.com/api'
-    baseURL = `${ process.env.BASE_URL }/api`
+    baseURL = `https://margostat-server.up.railway.app/api`
 } else {
     baseURL = 'http://localhost:5000/api'
 }
