@@ -86,7 +86,7 @@ const Group = (props: IGroupProps) => {
                         className={ `items-center font-semibold h-6 flex flex-row py-4 space-x-3 px-3 ${ i % 2 !== 0 && 'bg-dark-6/50' }` }
                     >
                         <div className='w-6 italic text-secondary'>
-                            { slot.n + 1 }
+                            { i + 1 }
                         </div>
                         <div className='flex flex-row items-center w-16 space-x-3'>
                             <div>
