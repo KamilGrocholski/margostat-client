@@ -42,11 +42,11 @@ const Group = (props: IGroupProps) => {
     return (
         <li    
             ref={ refGroup }
-            className='bg-dark-7 rounded-md p-3 flex flex-col drop-shadow-lg border border-dark-6/90 w-full'
+            className='flex flex-col w-full p-3 border rounded-md bg-dark-7 drop-shadow-lg border-dark-6/90'
         >
-            <div className='relative flex items-center justify-center font-semibold text-xl mb-3'>
+            <div className='relative flex items-center justify-center mb-3 text-xl font-semibold'>
                 <button 
-                    className='absolute -top-1 text-gray-500 left-0 dni'
+                    className='absolute left-0 text-gray-500 -top-1 dni'
                     onClick={ () => { 
                         props.selectedGroupDispatch({ type: 'COPY_GROUP_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } }) 
                         props.setMode('creating')
@@ -55,7 +55,7 @@ const Group = (props: IGroupProps) => {
                     <CopyIcon />
                 </button>
                 <button
-                    className='absolute -top-1 text-gray-500 left-10 dni'
+                    className='absolute text-gray-500 -top-1 left-10 dni'
                     onClick={ () => {
                         props.editGroupDispatch({ type: 'COPY_FROM_GROUPS_LIST', payload: { name: props.name, slots: props.slots } })
                         props.setMode('editing')
@@ -64,7 +64,7 @@ const Group = (props: IGroupProps) => {
                     <EditIcon />
                 </button>
                 <button
-                    className='absolute -top-1 text-gray-500 left-20 dni'
+                    className='absolute text-gray-500 -top-1 left-20 dni'
                     onClick={ handleHtmlToImage }
                 >
                     <DownloadIcon />
@@ -73,7 +73,7 @@ const Group = (props: IGroupProps) => {
                     { props.name }
                 </div>
                 <button 
-                    className='absolute -top-1 text-red-500 right-0 dni'
+                    className='absolute right-0 text-red-500 -top-1 dni'
                     onClick={ () => { props.groupsListDispatch({ type: 'REMOVE_GROUP_FROM_GROUPS_LIST', payload: { name: props.name } }); props.checkUsedCharacters(props.name) } }
                 >
                     <XCircleIcon />
@@ -85,10 +85,10 @@ const Group = (props: IGroupProps) => {
                         key={ i }
                         className={ `items-center font-semibold h-6 flex flex-row py-4 space-x-3 px-3 ${ i % 2 !== 0 && 'bg-dark-6/50' }` }
                     >
-                        <div className='text-secondary italic w-6'>
-                            { slot.n + 1 }
+                        <div className='w-6 italic text-secondary'>
+                            { slot.n }
                         </div>
-                        <div className='flex flex-row w-16 items-center space-x-3'>
+                        <div className='flex flex-row items-center w-16 space-x-3'>
                             <div>
                                 { slot.character?.prof && MARGONEM_CONSTS.PROFESSIONS[slot.character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
                             </div>
@@ -148,16 +148,16 @@ const GroupList = (
       }, [ref])
 
   return (
-    <div className='pr-3 h-full flex flex-col space-y-3'>
+    <div className='flex flex-col h-full pr-3 space-y-3'>
         <button 
             onClick={ handleHtmlToImage } 
-            className='flex flex-row space-x-1 hover:text-sky-500 bg-dark-6 items-center drop-shadow-lg rounded h-10 px-3 w-fit py-1 text-center text-secondary'
+            className='flex flex-row items-center h-10 px-3 py-1 space-x-1 text-center rounded hover:text-sky-500 bg-dark-6 drop-shadow-lg w-fit text-secondary'
         >
             <div>Pobierz listę jako obraz</div>
             <div><DownloadIcon /></div>
         </button>
-        <div className='overflow-y-scroll overscroll-none h-full'>
-            <ul ref={ ref } className='flex flex-col space-y-5 pr-3'>
+        <div className='h-full overflow-y-scroll overscroll-none'>
+            <ul ref={ ref } className='flex flex-col pr-3 space-y-5'>
                 {groups?.map((group, i) => (
                     <Group 
                         key={ i }

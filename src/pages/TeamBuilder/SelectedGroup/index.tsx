@@ -39,15 +39,15 @@ const SelectedGroupSlot = (
         return (
             <div 
                 ref={ drop }
-                className='flex flex-row space-x-3 w-full font-semibold cursor-grab'
+                className='flex flex-row w-full space-x-3 font-semibold cursor-grab'
             >
-                <div className='text-secondary flex items-center w-6 italic'>
+                <div className='flex items-center w-6 italic text-secondary'>
                     { slotNumber }
                 </div>
                 <div
                     className={ `flex flex-row space-x-3 bg-dark-6/50 h-8 px-3 w-full py-1 ${ isOver && 'border border-sky-500' }` }
                 >
-                    <div className='flex flex-row space-x-3 items-center w-16'>
+                    <div className='flex flex-row items-center w-16 space-x-3'>
                         <div>
                             { character?.prof && MARGONEM_CONSTS.PROFESSIONS[character.prof as keyof typeof MARGONEM_CONSTS.PROFESSIONS].icon }
                         </div>
@@ -64,8 +64,8 @@ const SelectedGroupSlot = (
                     </div>
                 </div>
                 <button
-                    onClick={ () => dispatch({ type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: slotNumber } }) }
-                    className='text-red-500 text-xl text-center flex items-center h-full w-5 justify-center'
+                    onClick={ () => { dispatch({ type: 'REMOVE_ONE_FROM_SELECTED_GROUP', payload: { n: slotNumber } }); console.log(slotNumber) } }
+                    className='flex items-center justify-center w-5 h-full text-xl text-center text-red-500'
                 >
                     &times;
                 </button>    
@@ -143,6 +143,7 @@ const SelectedGroup = (
     const handleAddToGroupsList = () => {
         setIsErrorName(false)
         setNameMsg('')
+        console.log(state.slots)
         if (groupsListState.groupsList?.some(group => group.name === name)) {
             setIsErrorName(true)
             setNameMsg('Nazwa jest już zajęta.')
@@ -162,13 +163,13 @@ const SelectedGroup = (
 
         <div className='flex flex-row justify-evenly'>
             <button 
-                className='rounded-md px-3 py-1 bg-green-500'
+                className='px-3 py-1 bg-green-500 rounded-md'
                 onClick={ handleAddToGroupsList }
             >
                 Utwórz grupę
             </button>
             <button 
-                className='rounded-md px-3 py-1 bg-yellow-500'
+                className='px-3 py-1 bg-yellow-500 rounded-md'
                 onClick={ () => dispatch({ type: 'RESET_SELECTED_GROUP' }) }
             >
                 Resetuj
@@ -183,7 +184,7 @@ const SelectedGroup = (
                 {
                     isEditOpen
                         ? <input className='text-white bg-dark-8/90' value={ name } onChange={ e => { if (name.length <= 22) { setName(e.target.value) } } } />
-                        : <div className='text-xl text-center font-semibold'>{ name }</div>
+                        : <div className='text-xl font-semibold text-center'>{ name }</div>
                 }
                 <button onClick={ () => setIsEditOpen(prev => !prev) }>
                     {isEditOpen

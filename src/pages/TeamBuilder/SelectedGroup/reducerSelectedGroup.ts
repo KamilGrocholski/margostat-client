@@ -80,7 +80,7 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
                 slots: state.slots.map((slot, i) => {
                     if (i === action.payload.n - 1) {
                         return {
-                            n: i,
+                            n: i + 1,
                             character: null
                         }
                     }
@@ -117,8 +117,8 @@ export const reducerSelectedGroup = (state: IGroup, action: TActionSelectedGroup
             const from = state.slots[action.payload.from - 1]?.character
             const to = state.slots[action.payload.to - 1]?.character
             const newSlots = state.slots.map((slot, i) => {
-                if (i === action.payload.from - 1) return { n: i, character: to }
-                if (i === action.payload.to - 1) return { n: i, character: from }
+                if (i === action.payload.from - 1) return { n: i + 1, character: to }
+                if (i === action.payload.to - 1) return { n: i + 1, character: from }
                 return slot
             })
             return {
